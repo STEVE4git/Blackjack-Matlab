@@ -11,20 +11,40 @@ function [] = main() % The  main entry point of the matlab function
     blackjack_multiplier = 1.5;
 
     current_hand = generate_cards(); %This is 6 total cards it should be enough for 90% of rounds
-    graphics_renderer_main(); %Starts rendering the initial scene
+    graphics_renderer_main(); %Starts rendering the initial scene. This will be the title screen 
 
-    bet_results = validation_bet_check(human_money, current_chips);
+    users_cards = current_hand([1:2],[1:2]) %Users cards are the first two in the deck
+    dealers_cards = current_hand([3:4],[3:4])
+    how_many_swaps = 0;
+    %await user to click on START GAME
+
+    %Call function to scene transition to the blackjack table
+
+
+    bet_results = validation_bet_check(human_money, current_chips); %This will needed to be graphicized but this checks user input and allows the buying of chips
 
     while 0 < human_money %The main loop of the function
 
-        graphics_renderer(current_hand, current_chips); %Changes the scene and starts the game. Requires parsing of wether the cards need to be faceup/facedown
+        graphics_renderer(users_cards,dealers_cards,current_chips); %Changes the scene and starts the game. Requires parsing of wether the cards need to be faceup/facedown. Renders current chips
 
-        user_reaction_to_deal = %get MOUSE callback to determine how to react to the deal
+        user_reaction_to_deal = %get MOUSE callback to determine how to react to the deal (The user can hit, stand whatever)
 
         switch user_reaction_to_deal % Mouse callback should return what the used clicked like this
 
             case 'hit'  %Each case will need logic dealing with how the cards are dealt.
 
+                if 4 <= how_many_swaps || how_many_swaps < 1
+                    swap_deck = generate_cards();
+                    how_many_swaps = 0;
+                end
+
+                cards_in_matrix = size(users_cards, 1);
+                users_cards[cards_in_matrix+1,[1:2]] = zeros(1,2);
+
+                how_many_swaps= how_many_swaps+1;
+                users_cards(cards_in_matrix+1,[1:2]) = swap_deck(how_many_swaps,[1:2]);
+                
+                %Users card number gets increased
             end
 
             case 'stand'
@@ -153,14 +173,14 @@ function cards = generate_cards()
     rng = ('shuffle');
     card_value_size = length(CARD_VALUE);
     card_type_size = length(CARD_TYPE);
-    value_matrix = [:,randi([1 card_value_size],6,1)];
-    card_type = [:,randi([1 card_type_size],6,1)];
+    value_matrix = [:,randi([1 card_value_size],4,1)];
+    card_type = [:,randi([1 card_type_size],4,1)];
 
-    card_matrix = zeros(6,2);
+    card_matrix = zeros(4,2);
     card_matrix(:,1) = value_matrix;
     card_matrix(:,2) = card_type;
 
-    cards = card_matrix; % Returns 6 randomly assorted  cards
+    cards = card_matrix; % Returns 4 randomly assorted  cards
  
 end
 
