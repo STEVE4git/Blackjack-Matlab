@@ -47,6 +47,13 @@ function [] = main() % The  main entry point of the matlab function
 
     end
 
+    prompt_restart = "Do you want to play again? Type yes to do so or no to quit";
+    restart_string = input(prompt_restart);
+
+    if !strcmp("no", restart_string) %Not sure if Mr.Scott even wants an option to restart.. Going to add this though since I saw it in the design doc
+        main(); % Recursion. Get used to it 
+    end    
+
 end
 
 function [human_money_return, current_chips_return] = validation_bet_check(human_money, current_chips)
