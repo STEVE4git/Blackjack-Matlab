@@ -1,7 +1,7 @@
 %Blackjack game. Reads user input, allows betting, graphics.__amd64
+%Written by: Stephen Martin, 
 
-
-function entry = main() % The  main entry point of the matlab function
+function [] = main() % The  main entry point of the matlab function
 
 human_money =  5000
 chips_cost = 0
@@ -13,6 +13,8 @@ while 0 < human_money
 
 
 end
+end
+
 
 function bought_chips = buy_chips(human_money, chips_cost)
 
@@ -26,17 +28,30 @@ if human_money < chips_cost*how_many_chips
     error_string = input(prompt_resolve, "s");
     lower_string = lower(error_string);
     if strcmp(lower_string, "yes")
-        new_input = ""
-
+    buy_chips(human_money, chips_cost);
+    end
+ end   
+bought_chips = chips_cost*how_many_chips;
 
 end
 
 
 function cards = generate_cards(num_of_cards)
+rng = ('shuffle');
+card_value_size = length(CARD_VALUE);
+card_type_size = length(CARD_TYPE);
+rand_mat = randi([1 52],4,13)
 
 
 
 end
 
 
-function 
+
+end
+
+CARD_VALUE = ['Ace','2','3','4','5','6','7','8','9','10','J','Q','K']
+CARD_TYPE = ['Hearts','Spades','Clubs','Diamonds']
+
+
+
