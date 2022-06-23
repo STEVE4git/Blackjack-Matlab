@@ -14,14 +14,11 @@ function [] = main() % The  main entry point of the matlab function
 
     while 0 < human_money %The main loop of the function
 
-        
-
-
         graphics_renderer(current_hand, current_chips); %Changes the scene and starts the game. Requires parsing of wether the cards need to be faceup/facedown
 
         user_reaction_to_deal = %get MOUSE callback to determine how to react to the deal
 
-        switch(user_reaction_to_deal) % Mouse callback should return what the used clicked like this
+        switch user_reaction_to_deal % Mouse callback should return what the used clicked like this
 
             case 'hit'  %Each case will need logic dealing with how the cards are dealt.
 
@@ -44,14 +41,13 @@ function [] = main() % The  main entry point of the matlab function
         end
 
         current_hand = generate_cards(); %More stuff will need to be done before this but each hand will be generated from this function or in the case cards are run out in one of the cases
-        
-
 
     end
 
 end
 
 function [human_money_return, current_chips_return] = validation_bet_check(human_money, current_chips)
+
     chips_betted = prompt_bet();
 
     if current_chips < 1 || chips_betted < current_chips
@@ -72,13 +68,13 @@ function [human_money_return, current_chips_return] = validation_bet_check(human
         current_chips_return = current_chips - chips_betted;
     end    
 
-
-
 end
 
 function amount_of_chips_betted = prompt_bet()
+
      prompt_bet = "How many chips do you want to bet this round?";
      amount_of_chips_betted = input(prompt_bet); %This will recieve a callback from keyboard events
+
 end
 
 
@@ -109,7 +105,6 @@ end
 
 
 function bought_chips = buy_chips(human_money, chips_cost, out_of_chips)
-
 
     prompt = "How many chips do you want to buy?";
     how_many_chips = input(prompt);
@@ -148,8 +143,7 @@ function cards = generate_cards()
     card_matrix(:,1) = value_matrix;
     card_matrix(:,2) = card_type;
 
-    cards = card_matrix; %Returns 6 randomly assorted  cards
-    
+    cards = card_matrix; % Returns 6 randomly assorted  cards
  
 end
 
