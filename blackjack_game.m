@@ -1,4 +1,4 @@
-%Blackjack game. Reads user input, allows betting, graphics.__amd64
+%Blackjack game. Reads user input, allows betting
 %Written by: Stephen Martin, 
 
 function [] = main() % The  main entry point of the matlab function
@@ -8,7 +8,7 @@ chips_cost = 0
 current_cards = 52
 
 while 0 < human_money 
-
+                        %Functions are run here, Don't use global variables!
 
 
 
@@ -27,25 +27,31 @@ if human_money < chips_cost*how_many_chips
     prompt_resolve = "Do you want to try buying chips again? Type yes or no.";
     error_string = input(prompt_resolve, "s");
     lower_string = lower(error_string);
+    
     if strcmp(lower_string, "yes")
-    buy_chips(human_money, chips_cost);
+        buy_chips(human_money, chips_cost); %Recursive function call allowiwng user to re-input their chips
     end
+
  end   
 bought_chips = chips_cost*how_many_chips;
 
 end
 
 
-function cards = generate_cards(num_of_cards)
+function cards = generate_cards()
+
 rng = ('shuffle');
 card_value_size = length(CARD_VALUE);
 card_type_size = length(CARD_TYPE);
-rand_mat = randi([1 52],4,13)
 
 
+rand_card_index = randi([1 13],52);
+card_type_index = randi([1 4], 52);
 
-end
+card_column_vector(:,1)=rand_card_index;
+card_column_vector(:,2)=card_type_index;
 
+cards = card_column_vector;    %Stores the card type and value as a column vector. The key is at the bottom of the file for consistenty
 
 
 end
