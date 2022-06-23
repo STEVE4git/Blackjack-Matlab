@@ -5,7 +5,7 @@
 
 function [] = main() % The  main entry point of the matlab function
 
-    human_money =  5000;
+    human_money =  5000; %these are our starting values
     chips_cost = 50;
     current_chips = 0;
     blackjack_multiplier = 1.5;
@@ -14,22 +14,8 @@ function [] = main() % The  main entry point of the matlab function
 
     while 0 < human_money %The main loop of the function
 
-        fprintf("You can currently afford %d chips. Do you want to buy more? (Type yes to buy chips)", human_money/chips_cost);
-        bet_string = input("", "s");   %All of these command line functions will NEED to be replaced with the graphics stuff. This will recieve a callback from keyboard events
-
-        if strcmp(bet_string, "yes") 
-            chips_bought = buy_chips(human_money, chips_cost, false);
-            current_chips = current_chips+ chips_bought;
-        end
-
-        elseif current_chips < 1
-            chips_bought = buy_chips(human_money, chips_cost, true);
-            current_chips = current_chips+ chips_bought;
-        end    
-
         
-        prompt_bet = "How many chips do you want to bet this round?";
-        chips_betted = input(prompt_bet); %This will recieve a callback from keyboard events
+
 
         graphics_renderer(current_hand, current_chips); %Changes the scene and starts the game. Requires parsing of wether the cards need to be faceup/facedown
 
@@ -37,22 +23,22 @@ function [] = main() % The  main entry point of the matlab function
 
         switch(user_reaction_to_deal) % Mouse callback should return what the used clicked like this
 
-        case 'hit'  %Each case will need logic dealing with how the cards are dealt.
+            case 'hit'  %Each case will need logic dealing with how the cards are dealt.
 
-        end
+            end
 
-        case 'stand'
+            case 'stand'
 
-        end
+            end
 
-        case 'doubling down'
+            case 'doubling down'
 
 
-        end
+            end
 
-        case 'split' %there could be a million different splits so this will call a function to parse it
+            case 'split' %there could be a million different splits so this will call a function to parse it
 
-        end
+            end
 
 
         end
@@ -65,6 +51,62 @@ function [] = main() % The  main entry point of the matlab function
 
 end
 
+function [human_money_return, current_chips_return] = validation_bet_check(human_money, current_chips)
+    chips_betted = prompt_bet();
+
+    if current_chips < 1 || chips_betted < current_chips
+        human_values_vector = prompt_for_chips(human_money,chips_cost,current_chips, chips_betted);
+        temp_human_val = human_values_vector(1); %Checks if null return (user wants to change bet)
+        if !isempty(temp_human_val)
+            human_money_return = temp_human_val;
+            current_chips_return = current_chips + human_values_vector(2);
+            
+        else
+            validation_bet_check(); %Beautiful recursion allowing the user to change their bet and checking it again within the same function
+        end    
+                            
+    end
+    
+    else
+        human_money_return = human_money; %It is a good bet and nothing was bought
+        current_chips_return = current_chips - chips_betted;
+    end    
+
+
+
+end
+
+function amount_of_chips_betted = prompt_bet()
+     prompt_bet = "How many chips do you want to bet this round?";
+     amount_of_chips_betted = input(prompt_bet); %This will recieve a callback from keyboard events
+end
+
+
+function [human_money, current_chips] = prompt_for_chips(human_money, chips_cost, current_chips, betted_chips)
+
+    fprintf("You can currently afford %d chips you need %d more to place a bet. Do you want to buy more? (Type yes to buy chips or no to continue and change your bet)", human_money/chips_cost, betted_chips);
+    bet_string = lower(input("", "s"));   %All of these command line functions will NEED to be replaced with the graphics stuff. This will recieve a callback from keyboard event
+
+    if strcmp(bet_string, "yes") 
+        chips_bought = buy_chips(human_money, chips_cost, false);
+        current_chips = current_chips+ chips_bought;
+        human_money = human_money - chips_bought*chips_cost;
+    end
+
+    elseif current_chips < 1
+        chips_bought = buy_chips(human_money, chips_cost, true);
+        current_chips = current_chips+ chips_bought;
+        human_money = human_money - chips_bought*chips_cost;
+    end
+
+    elseif !strcmp(bet_string, "no")
+        fprintf("An error has occured! Please type yes or no if you want to buy chips or not"); 
+        prompt_for_chips(human_money, chips_cost, current_chips); %Recursive function call if an error has occured
+    end    
+
+end            
+
+
 
 function bought_chips = buy_chips(human_money, chips_cost, out_of_chips)
 
@@ -73,7 +115,7 @@ function bought_chips = buy_chips(human_money, chips_cost, out_of_chips)
     how_many_chips = input(prompt);
 
     if human_money < chips_cost*how_many_chips
-    
+
         prompt_error = "You don't have enough money to buy the chips!"; %FIXME: Replace with graphics functions
         disp(prompt_error);
         prompt_resolve = "Do you want to try buying chips again? Type yes or no.";
