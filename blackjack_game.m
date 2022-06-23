@@ -1,5 +1,5 @@
 %Blackjack game. Reads user input, allows betting
-%Written by: Stephen Martin,
+%Written by: Stephen Martin
 %This is the main file for running the game and contains the important logic regarding how the game works
 %Functions are run from the main while loop stopping when the user runs out of money
 
@@ -48,7 +48,7 @@ function [] = main() % The  main entry point of the matlab function
     end
 
     prompt_restart = "Do you want to play again? Type yes to do so or no to quit";
-    restart_string = input(prompt_restart);
+    restart_string = lower(input(prompt_restart));
 
     if !strcmp("no", restart_string) %Not sure if Mr.Scott even wants an option to restart.. Going to add this though since I saw it in the design doc
         main(); % Recursion. Get used to it 
@@ -79,8 +79,6 @@ function [human_money_return, current_chips_return] = validation_bet_check(human
         good_values = validation_bet_check(human_money, current_chips); %recursion will endlessly keep creating functions intill it dies or the user enters something right
         human_money_return = good_values(1);
         current_chips_return = good_values(2);
-
-
 
     else
         human_money_return = human_money; %It is a good bet and nothing was bought
