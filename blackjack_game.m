@@ -11,6 +11,9 @@ function [] = main() % The  main entry point of the matlab function
     blackjack_multiplier = 1.5;
 
     current_hand = generate_cards(); %This is 6 total cards it should be enough for 90% of rounds
+    graphics_renderer_main(); %Starts rendering the initial scene
+
+    bet_results = validation_bet_check(human_money, current_chips);
 
     while 0 < human_money %The main loop of the function
 
@@ -50,19 +53,28 @@ function [human_money_return, current_chips_return] = validation_bet_check(human
 
     chips_betted = prompt_bet();
 
-    if current_chips < 1 || chips_betted < current_chips
+    if current_chips < 1 || (current_chips < chips_betted && 0 < chips_betted)  %Prevents betting negative chips
         human_values_vector = prompt_for_chips(human_money,chips_cost,current_chips, chips_betted);
         temp_human_val = human_values_vector(1); %Checks if null return (user wants to change bet)
         if !isempty(temp_human_val)
             human_money_return = temp_human_val;
             current_chips_return = current_chips + human_values_vector(2);
-            
+        end    
         else
-            validation_bet_check(); %Beautiful recursion allowing the user to change their bet and checking it again within the same function
+            good_values = validation_bet_check(human_money, current_chips); %Beautiful recursion allowing the user to change their bet and checking it again within the same function
+            human_money_return = good_values(1);
+            current_chips_return = good_values(2);
         end    
                             
     end
-    
+    elseif chips_betted < 0
+
+        good_values = validation_bet_check(human_money, current_chips); %recursion will endlessly keep creating functions intill it dies or the user enters something right
+        human_money_return = good_values(1);
+        current_chips_return = good_values(2);
+
+
+
     else
         human_money_return = human_money; %It is a good bet and nothing was bought
         current_chips_return = current_chips - chips_betted;
