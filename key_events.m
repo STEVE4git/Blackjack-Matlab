@@ -1,7 +1,9 @@
 
 %There will need to be a variable for coordinating keyboard events between scenes
+%Relevant values contains what you need for the frame. In main-menu this will be empty but in buying_chips it will contain the users money and current chips
+%You will use this to prevent the user from betting more than their means and preventing user's from continuing the game without buying chips
 
-function n =  key_events(current_scene) %This is completely wrong btw, https://www.mathworks.com/help/matlab/ref/waitforbuttonpress.html 
+function n =  key_events(current_scene, relevant_values) %What you had wouldn't have worked btw, https://www.mathworks.com/help/matlab/ref/waitforbuttonpress.html 
   %key events decodes the user inputs from keyboard
   %input arguments
   %src - callback function

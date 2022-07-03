@@ -1,5 +1,11 @@
+%These need to be converted to functions to be called based on the scene
+%Convert these so that you can call one function for each scene e.g when someone calls entry_menu() it completely changes the UI to the scene 
+
+
+
 %   MAIN WINDOW
 % Generate main window:
+
 fig = uifigure('Name', 'Doge Blackjack');   %Generates main window
         fig.Position=[128 56 1280 720];     %set window position and size
         set(fig,'color','black');
