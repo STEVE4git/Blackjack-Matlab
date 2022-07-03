@@ -227,3 +227,13 @@ DealButton = uibutton(fig, 'push');
        DealButton.FontWeight = 'bold';
        DealButton.Position = [250 375 96 30];
        DealButton.Text = 'DEAL!';
+
+
+
+%QUITGAME RENDERING-------------------
+%Render a menu here that prompts the user if they really want to quit the game
+
+function end_menu = uibutton 
+
+
+

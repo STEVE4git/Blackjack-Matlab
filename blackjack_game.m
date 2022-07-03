@@ -27,11 +27,17 @@ function [] = main() % The  main entry point of the matlab function
 
         graphics_renderer(users_cards,dealers_cards,current_chips); %Changes the scene and starts the game. Requires parsing of wether the cards need to be faceup/facedown. Renders current chips
 
-        user_reaction_to_deal = %get MOUSE callback to determine how to react to the deal (The user can hit, stand whatever)
+        user_reaction_to_deal = waitforbuttonpress;
+        if user_reaction_to_deal == 1
+            user_reaction_to_deal = user_key_bets(user_reaction_to_deal.CurrentCharacter);
+        else
+            user_reaction_to_deal = mouse_events_parser(user_reaction_to_deal); %These should return a value from 0-3 based on what the user chose
+            
+
 
         switch user_reaction_to_deal % Mouse callback should return what the used clicked like this
 
-            case 'hit'  %Each case will need logic dealing with how the cards are dealt.
+            case 0  %Each case will need logic dealing with how the cards are dealt.
 
                 if 4 <= how_many_swaps || how_many_swaps < 1
                     swap_deck = generate_cards();
@@ -47,16 +53,16 @@ function [] = main() % The  main entry point of the matlab function
                 %Users card number gets increased
             end
 
-            case 'stand'
+            case 1
 
             end
 
-            case 'doubling down'
+            case 2
 
 
             end
 
-            case 'split' %there could be a million different splits so this will call a function to parse it
+            case 3 %there could be a million different splits so this will call a function to parse it
 
             end
 
@@ -75,7 +81,13 @@ function [] = main() % The  main entry point of the matlab function
     end    
 
 end
+function end_value = end_game(user_key)
+    should_end = render_end_game() % Pops up a menu that needs to be handled by Mouse Events or keyboard events
 
+
+
+
+end
 function [human_money_return, current_chips_return] = validation_bet_check(human_money, current_chips)
 
     chips_betted = prompt_bet();
