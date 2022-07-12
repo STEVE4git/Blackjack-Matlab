@@ -4,8 +4,9 @@ function n =  key_events(src,event)
   %src - callback function
   %event - callback function
   %output arguments
-  global quitgame;
-  global entergame;
+  global quitgame = false;
+  global entergame = false;
+  
 
   switch event.Key
 
