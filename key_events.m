@@ -4,9 +4,8 @@ function n =  key_events(src,event)
   %src - callback function
   %event - callback function
   %output arguments
-  global quitgame = false;
-  global entergame = false;
   
+
 
   switch event.Key
 
@@ -14,7 +13,7 @@ function n =  key_events(src,event)
   entergame = true;
 
   case 'q'      %checks whether the player wants to quit
-    quitgame =true;
+    quit_game =true;
 
   case (event.Key!='return') %takes the input from the screen and stores it in n
      n = event.Key;
