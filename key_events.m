@@ -13,7 +13,7 @@ function n =  key_events(src,event)
   entergame = true;
 
   case 'q'      %checks whether the player wants to quit
-    quit_game =true;
+    quit_game(true);
 
   case (event.Key!='return') %takes the input from the screen and stores it in n
      n = event.Key;
