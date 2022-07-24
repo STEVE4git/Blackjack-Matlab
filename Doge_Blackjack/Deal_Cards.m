@@ -49,14 +49,14 @@ Pot_Size = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],              ...
                         [265 525 108 24], 'Value', Current_Bet.Value * 25);
 
 
-Deck = [1:1:13; 14:1:26; 27:1:39; 40:1:52];
+
+rng('shuffle');
 Card_img = 0;
 
-    function [Val] = Cards()
-    Card_Draw = Deck(randi(4, 1), randi(13,1));
-    [r, c] = find(Card_Draw == Deck);
-    Suit = '';
-    Num = '';
+    function [string, Val] = Cards()
+    r = randi([1 4]);
+    c = randi([1 13]); 
+   
 
         switch r
             case 1
@@ -110,7 +110,8 @@ Card_img = 0;
                 Num = 'k.gif';
                 Val = 10;
         end
-    Card_img = [Suit, Num];
+        string = Suit+Num; % Provides the full filepath to open the card and render it 
+        
     end
 
 % Initial Deal
