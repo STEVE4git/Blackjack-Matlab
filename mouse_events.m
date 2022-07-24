@@ -1,3 +1,10 @@
 %file for reading mouse movements and getting the mouse position
 %controls ALL mouse events up/down
-%Read key_events.m for an outline of what you should do. (Exactly the same as it but detecting if the user hit a certain button)
+function [mousePos] = mouse_events(mainAxis)
+%mouse_events gets the current mouse position
+%Input arguments:
+%   mainAxis - axes object
+%Output arguments
+%   mousePos - 2 element vector containing: [x y]
+tempMousePos = get(mainAxis,'CurrentPoint');
+mousePos = [tempMousePos(1), tempMousePos(3)];
