@@ -46,14 +46,13 @@ buy_chips_spnr_lbl = uilabel(fig2, 'BackgroundColor', '#e6e6e6',        ...
                                  'HorizontalAlignment', 'Center');
        buy_chips_spnr_lbl.Text = 'Welcome! How many chips would you like?';
 
-
 buy_chips_spnr = uispinner(fig2, 'Position', [510 218 65 22],           ...
-          'Limits', [0 (user.money/chip_val)], 'ValueChangedFcn', @(buy_chips_spnr,event)...
+          'Limits', [0 user.money/chip_val], 'ValueChangedFcn', @(buy_chips_spnr,event)...
             balance_changing(balance,buy_chips_spnr));
 
     function balance_changing(balance,buy_chips_spnr)
         balance.Value = user.money - buy_chips_spnr.Value * chip_val;
-        chips_display.Value = buy_chips_spnr.Value;
+        chips_display.Value = user.chips + buy_chips_spnr.Value;
     end
 
 buy_max = uibutton(fig2, 'push',                                        ...

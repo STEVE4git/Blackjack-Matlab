@@ -95,7 +95,7 @@ current_bet_label = uilabel(fig3, 'HorizontalAlignment', 'center',      ...
 
 
  bet_spinner = uispinner(fig3, 'Position', [265 525 108 24],           ...
-          'Limits', [1 user.chips],'BackgroundColor', [0.1 0.1 0.1], 'FontColor', [1 0.4 0.15],'Visible','on', 'ValueChangedFcn', @(bet_spinner,event)...
+          'Limits', [0 user.chips],'BackgroundColor', [0.1 0.1 0.1], 'FontColor', [1 0.4 0.15],'Visible','on', 'ValueChangedFcn', @(bet_spinner,event)...
             start_betting(bet_spinner));
 
 function start_betting(bet_spinner)
@@ -112,7 +112,7 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                           'ButtonPushedFcn', @(deal_btn,event)         ...
                           deal_lim(deal_btn,event));
 
-    function [] = deal_lim(deal_btn,event)
+    function [] = deal_lim(deal_btn,~)
         if temp_chips_bet > 0
             user.chips = user.chips - temp_chips_bet;
             user.curr_bet = temp_chips_bet;
@@ -120,45 +120,49 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             close(fig3);
             restart_game = uifigure('Name', 'Hand has ended!',                               ...
                     'Position', [128 56 1280 720],                      ...
-                    'Color', 'black', 'Pointer','hand', 'Visible', 'off');
+                    'Color', 'black', 'Pointer','hand', 'Visible', 'on');
+           if 0 < user.money      
            goto_cashier = uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
                           'FontSize', 16, 'FontWeight', 'bold',         ...
-                       'Position', [250 375 96 30], 'Text', 'Want to buy more chips?', ...
-                          'ButtonPushedFcn', @(goto_cashier, event)call_cashier(goto_cashier, event));
-                        
-
+                       'Position', [200 375 300 30], 'Text', 'Want to buy more chips?', ...
+                          'ButtonPushedFcn', @call_cashier);
+           end
+            if 0 < user.chips
             goto_table =  uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
                           'FontSize', 16, 'FontWeight', 'bold',         ...
-                       'Position', [250 375 96 30], 'Text', 'Want to play again?', ...
-                          'ButtonPushedFcn', @(goto_table, event)call_table(goto_table, event));
+                       'Position', [600 375 250 30], 'Text', 'Want to play again?', ...
+                          'ButtonPushedFcn', @call_table);
+            end      
                          
 
             quit =  uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
                           'FontSize', 16, 'FontWeight', 'bold',         ...
-                       'Position', [250 375 96 30], 'Text', 'Exit', ...
-                          'ButtonPushedFcn', @(quit, event)quit_game(quit, event));
+                       'Position', [100 375 100 30], 'Text', 'Exit', ...
+                          'ButtonPushedFcn', @quit_game);
                         
         
           else
-           selection = uiconfirm(fig3,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to end the game!",...
+           selection = uiconfirm(fig3,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to buy chips!",...
             'No Bet!');
         switch selection
             case 'OK'
                 the_table(user,chip_val);
             case 'Cancel'
-                exit;
+                cashier(user,chip_val);
         end
 
 
         end
     end
-       function call_cashier()
-                          cashier(user);
+       function call_cashier(~,~)
+                cashier(user,chip_val);
+        
+               
        end
-        function call_table()
-                  the_table(user);
+        function call_table(~,~)
+                  the_table(user,chip_val);
               end
-  function quit_game()
+  function quit_game(~,~)
                           exit;
                           end
     
