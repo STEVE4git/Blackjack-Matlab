@@ -13,12 +13,12 @@ function [] = blackjack ()
 
 
 fig1 = uifigure('Name', 'Doge Blackjack',                               ...
-                    'Position', [128 56 1280 720],                      ...
+                    'Windowstate','fullscreen',                      ...
                     'Color', 'black', 'Pointer','hand', 'Visible', 'off');
 
 %--------------------------------------------------------------------------
 % Generate Main Menu background
-fig_main = uiimage(fig1, 'Position', [250 45 750 701] );
+fig_main = uiimage(fig1, 'Position', [250 45 1920 1080] );
       fig_main.ImageSource = 'backgrounds\main_menu_background.gif';
 
 %--------------------------------------------------------------------------

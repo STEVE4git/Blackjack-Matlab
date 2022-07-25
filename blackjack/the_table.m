@@ -13,12 +13,12 @@ function [] = the_table(user,chip_val)
 temp_chips_bet = 0;
 
 fig3 = uifigure('Name', 'Doge Blackjack',                               ...
-                    'Position', [128 56 1280 720],                      ...
+                    'WindowState','fullscreen',                      ...
                     'Color', 'black', 'Pointer','hand', 'Visible', 'on');
 
     % Generates Blackjack table and dealer graphics.
 fig_start = uiimage(fig3, 'BackgroundColor', 'Black',                   ...
-                         'Position', [0 0 1280 720]);
+                         'Position', [0 0 1920 1080]);
        fig_start.ImageSource = 'backgrounds\Main.jpeg';
 
     % balance appears in top left corner
