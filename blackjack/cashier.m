@@ -39,6 +39,11 @@ buy_chips_spnr = uispinner(fig2, 'Position', [510 218 65 22],           ...
             balance_changing(balance,buy_chips_spnr));
 
     function balance_changing(balance,buy_chips_spnr)
+    % balance_changing updates the balance of the user
+    % Input arguments 
+    % balance - current balance of the user
+    % buy_chips_spnr - input from the user
+    % Output argumetns - none
         balance.Value = user.money - buy_chips_spnr.Value * chip_val;
         user.chips = buy_chips_spnr.Value;
         user.money = balance.Value;
@@ -54,6 +59,11 @@ buy_max = uibutton(fig2, 'push',                                        ...
                       max_chip(buy_max, buy_chips_spnr));
 
     function max_chip(buy_max, buy_chips_spnr)
+    % max_chip gives the maximum chips user can buy
+    % Input arguments
+    % buy_max - user wants to buy maximum chips
+    % buy_chips_spnr - input from the user
+    %Output arguments - none
         total_amount = user.money/chip_val;
         max_chips_val = floor(total_amount);
         buy_chips_spnr.Value = max_chips_val;
@@ -73,6 +83,12 @@ play_btn = uibutton(fig2, 'push',                                       ...
                           update_val(play_btn, buy_chips_spnr));
 
     function [] = update_val(play_btn, buy_chips_spnr)
+    % update_val checks whether the user has enough chips
+    % Input argumetns 
+    % play_btn - 
+    % buy_chips_spnr - 
+    % Outpur arguments - none
+    
         if user.chips > 0
             close(fig2);
             table(user, chip_val);
