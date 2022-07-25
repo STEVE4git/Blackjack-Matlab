@@ -18,7 +18,7 @@ fig1 = uifigure('Name', 'Doge Blackjack',                               ...
 
 %--------------------------------------------------------------------------
 % Generate Main Menu background
-fig_main = uiimage(fig1, 'Position', [250 45 1920 1080] );
+fig_main = uiimage(fig1, 'Position', [0 0 1920 1080] );
       fig_main.ImageSource = 'backgrounds\main_menu_background.gif';
 
 %--------------------------------------------------------------------------

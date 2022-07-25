@@ -7,7 +7,7 @@ function [] = cashier(user,chip_val,fig1)
 %   Output arguments
 %       None
 
-
+clf(fig1);
 cashier_fig = uiimage(fig1, 'Position', [0 0 1920 1080] );                 
        cashier_fig.ImageSource = 'backgrounds\Cashier.jpg';
 
