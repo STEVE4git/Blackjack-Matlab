@@ -65,7 +65,7 @@ dealer_cards = cards;
     card_2 = uiimage(fig3, 'Position', [600 285 85 115]);
                 card_2.ImageSource = 'b1fv.gif';
 
-[,dealer_card_val] = cards();
+[NULL,dealer_card_val] = cards();
 temp_val = 0;
 
     pause(0.4)
