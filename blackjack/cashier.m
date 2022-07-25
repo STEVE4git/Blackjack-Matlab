@@ -91,6 +91,7 @@ play_btn = uibutton(fig2, 'push',                                       ...
             'No Chips!');
             switch selection
                 case 'OK'
+                close(fig2);
                 cashier(user,chip_val);
                 case 'Cancel'
                 exit;

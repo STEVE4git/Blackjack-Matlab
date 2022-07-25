@@ -74,7 +74,7 @@ cashout_btn = uibutton(fig3, 'push', 'FontSize', 14,                    ...
                     'Exit', 'Icon', 'warning', 'CloseFcn', @exit_game);
     end
 
-    function exit_game(src, event)
+    function exit_game(~, event)
     % exit_game checks for mouse click
     % Input arguments 
     % src - callback function
@@ -125,13 +125,13 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
            goto_cashier = uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
                           'FontSize', 16, 'FontWeight', 'bold',         ...
                        'Position', [200 375 300 30], 'Text', 'Want to buy more chips?', ...
-                          'ButtonPushedFcn', @call_cashier);
+                          'ButtonPushedFcn', {@call_cashier,restart_game});
            end
             if 0 < user.chips
             goto_table =  uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
                           'FontSize', 16, 'FontWeight', 'bold',         ...
                        'Position', [600 375 250 30], 'Text', 'Want to play again?', ...
-                          'ButtonPushedFcn', @call_table);
+                          'ButtonPushedFcn', {@call_table,restart_game});
             end      
                          
 
@@ -142,24 +142,27 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                         
         
           else
-           selection = uiconfirm(fig3,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to buy chips!",...
+           selection = uiconfirm(fig3,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to exit!",...
             'No Bet!');
         switch selection
             case 'OK'
+                close(fig3);
                 the_table(user,chip_val);
             case 'Cancel'
-                cashier(user,chip_val);
+                exit;
         end
 
 
         end
     end
-       function call_cashier(~,~)
+       function call_cashier(~,~,restart_game)
+           close(restart_game);
                 cashier(user,chip_val);
         
                
        end
-        function call_table(~,~)
+        function call_table(~,~,restart_game)
+                   close(restart_game);
                   the_table(user,chip_val);
               end
   function quit_game(~,~)
