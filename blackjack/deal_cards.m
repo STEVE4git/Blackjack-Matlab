@@ -1,6 +1,4 @@
-function user_return = deal_cards(deal_btn,current_bet_label,  ...
-        btn_25, btn_50, btn_100, btn_500, btn_1000, clr_bet_btn,        ...
-        restart_btn, cashout_btn, fig3,user)
+function user_return = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig3,user)
 % deal_cards hides betting and restart options in Doge_Blackjack game 
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player 
@@ -23,17 +21,9 @@ function user_return = deal_cards(deal_btn,current_bet_label,  ...
 %       user_return
    
 deal_btn.Visible = 'off';
-btn_25.Visible = 'off';
-btn_50.Visible = 'off';
-btn_100.Visible = 'off';
-btn_500.Visible = 'off';
-btn_1000.Visible = 'off';
-clr_bet_btn.Visible = 'off';
-restart_btn.Visible = 'off';
 cashout_btn.Visible = 'off';
-current_bet.Visible = 'off';
 current_bet_label.Visible = 'off';
-
+bet_spinner.Visible = 'off';
 
 pot_size_label = uilabel(fig3, 'HorizontalAlignment', 'right',          ...
                               'VerticalAlignment', 'center', 'Fontsize',...
