@@ -1,4 +1,4 @@
-function table(user)
+function [] = table(user,chip_val)
 % Doge_Blackjack initiates a uifigure (fig3) and the Blackjack game 
 % environment. Doge_Blackjack incorporates features such as
 % multiple betting options, balance tracking, restart, and cashout/exit.
@@ -117,7 +117,7 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                     current_bet, Btn_25, Btn_50, Btn_100, Btn_500,      ...
                     Btn_1000, Clr_Bet_Btn, Restart_Btn, cashout_btn, fig3,user);
             close(fig3);
-            restart_game = uifigure('Name', 'Doge Blackjack',                               ...
+            restart_game = uifigure('Name', 'Hand has ended!',                               ...
                     'Position', [128 56 1280 720],                      ...
                     'Color', 'black', 'Pointer','hand', 'Visible', 'off');
            goto_cashier = uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
@@ -144,12 +144,19 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                           function quit_game(quit, event)
                           exit;
                           end
-
-
-
+        
+          else
+           selection = uiconfirm(fig2,'You haven't placed a bet!'! Hit ok to place a bet or hit cancel to end the game!',...
+            'No Bet!');
+        switch selection
+            case 'OK'
+                table(user,chip_val);
+            case 'Cancel'
+                exit;
         end
-    end
 
-fig3.Visible = 'on';
 
+     end
+
+    fig3.Visible = 'on';
 end

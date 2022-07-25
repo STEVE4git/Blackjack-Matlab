@@ -1,6 +1,6 @@
-function user = deal_cards(deal_btn, balance, current_bet_label, current_bet,  ...
+function user_return = deal_cards(deal_btn, balance, current_bet_label, current_bet,  ...
         btn_25, btn_50, btn_100, btn_500, btn_1000, clr_bet_btn,        ...
-        restart_btn, cashout_btn, fig3,user,chips_val)
+        restart_btn, cashout_btn, fig3,user,chip_val)
 % deal_cards hides betting and restart options in Doge_Blackjack game 
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player 
@@ -20,9 +20,9 @@ function user = deal_cards(deal_btn, balance, current_bet_label, current_bet,  .
 %       cashout_btn
 %       fig3
 %   Output arguements
-%       user
+%       user_return
    
-balance.Value = balance.Value - current_bet.Value * chips_val;
+balance.Value = balance.Value - current_bet.Value * chip_val;
 deal_btn.Visible = 'off';
 btn_25.Visible = 'off';
 btn_50.Visible = 'off';
@@ -50,7 +50,7 @@ pot_size = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],              ...
 
 
 
-function initial_deal(user)
+function [] = initial_deal() %This is where the GAME IS PLAYED. ALL user action e.g standing, hitting etc. Starts and ends HERE
 dealer_card_val = 0;
 % Initial Deal
 x = 30;
@@ -62,21 +62,21 @@ card_1 = uiimage(fig3, 'Position', [575 30 105 140]);
 dealer_cards = cards;
 
     pause(0.4)
-    Card_2 = uiimage(fig3, 'Position', [600 285 85 115]);
-                Card_2.ImageSource = 'b1fv.gif';
+    card_2 = uiimage(fig3, 'Position', [600 285 85 115]);
+                card_2.ImageSource = 'b1fv.gif';
 
 [,dealer_card_val] = cards();
 temp_val = 0;
 
     pause(0.4)
-    Card_3 = uiimage(fig3, 'Position', [605 30 105 140]);
-                [Card_3.ImageSource, temp_val] = cards();
-                    disp(player_cards);
+    card_3 = uiimage(fig3, 'Position', [605 30 105 140]);
+                [card_3.ImageSource, temp_val] = cards();
+                  
 user.card_val = user.card_val + temp_val;
 
     pause(0.4)
-    Card_4 = uiimage(fig3, 'Position', [625 285 85 115]);
-                [Card_4.ImageSource, temp_val] = cards();
+    card_4 = uiimage(fig3, 'Position', [625 285 85 115]);
+                [card_4.ImageSource, temp_val] = cards();
 dealer_card_val = dealer_card_val+temp_val;                
     pause(0.4)
 
@@ -100,7 +100,6 @@ hit_btn = uibutton(fig3, 'push',                                        ...
                           'Text', 'Hit Me!',                            ...
                           'ButtonPushedFcn', @(hit_btn, event)          ...
                           hit(hit_btn));
-
 end
     function [] = hit(hit_btn)
        [render_string, temp_val] = cards();
@@ -123,7 +122,6 @@ end
             end
 
 
-    end
 
 
     function [] = Hold(hold_btn)
@@ -202,5 +200,10 @@ function [string, val] = cards()
         end
         string = suit+num; % Provides the full filepath to open the card and render it 
         
+        end
     end
+
+
+initial_deal();
+user_return = user;
 end

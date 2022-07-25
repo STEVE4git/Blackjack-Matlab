@@ -1,4 +1,4 @@
-function cashout(cashout_btn,user)
+function [] = cashout(cashout_btn,user)
 % Cashout prompts users of Doge Blackjack to confirm exit upon selecting 
 % "Cashout and Exit" option during gameplay. Confirmation generates a 
 % uifigure (End_Fig) which displays the user's winnings or losses prior to 
