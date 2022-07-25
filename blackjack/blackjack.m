@@ -31,10 +31,10 @@ new_game_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
       new_game_btn.Icon = 'buttons\newgame.png';
 
     function begin(~,~,~)
-    close(fig1);
+    clf(fig1)
     user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
     chip_val = 50;
-    cashier(user,chip_val);
+    cashier(user,chip_val,fig1);
     end
 
 %--------------------------------------------------------------------------
