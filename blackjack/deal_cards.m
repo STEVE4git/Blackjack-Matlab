@@ -56,7 +56,7 @@ dealer_card_val = 0;
 x = 30;
 y = 25;
 card_1 = uiimage(fig3, 'Position', [575 30 105 140]);
-                [Card_1.ImageSource, user.card_val] = cards();
+                [card_1.ImageSource, user.card_val] = cards();
                    
 
 dealer_cards = cards;
@@ -88,7 +88,7 @@ hold_btn = uibutton(fig3, 'push',                                       ...
                           'FontSize', 18, 'FontWeight', 'bold',         ...
                           'FontColor', [1 1 1], 'VerticalAlignment',    ...
                           'Center', 'Text', 'Stand', 'ButtonPushedFcn', ...
-                          @(hold_btn, event) Hold(hold_btn));
+                          @(hold_btn, event) hold(hold_btn));
 
 
 hit_btn = uibutton(fig3, 'push',                                        ...
@@ -124,18 +124,18 @@ end
 
 
 
-    function [] = Hold(hold_btn)
+    function [] = hold(hold_btn)
         hit_btn.Visible = 'off';
-%         Dealer_Turn;
+%         dealer_turn;
     end
     
-%     function [] = Dealer_Turn(hold_btn)
+%     function [] = dealer_turn(hold_btn)
 %         while dealer_cards < 17
 %             dealer_cards = dealer_cards + cards;
 % 
 %             pause(0.25)
-%             NewD_Card = uiimage(fig3, 'Position', [625+y 285 85 115]);
-%                 NewD_Card.ImageSource = Card_img;
+%             newd_card = uiimage(fig3, 'Position', [625+y 285 85 115]);
+%                 [newd_card.ImageSource, NULL] = cards();
 %         
 %             y = y + 25;
 %         end
