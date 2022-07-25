@@ -1,2 +1,6 @@
 *.json
 *.txt
+*.sqlite
+*.suo
+*.lock
+*.vsidx
