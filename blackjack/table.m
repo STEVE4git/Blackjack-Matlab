@@ -2,9 +2,10 @@ function [] = table(user,chip_val)
 % Doge_Blackjack initiates a uifigure (fig3) and the Blackjack game 
 % environment. Doge_Blackjack incorporates features such as
 % multiple betting options, balance tracking, restart, and cashout/exit.
-%   Input arguements
+%   Input arguments
 %      user
-%   Output arguements
+%      chip_val
+%   Output arguments
 %       None
 
 
@@ -146,7 +147,7 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                           end
         
           else
-           selection = uiconfirm(fig2,'You haven't placed a bet!'! Hit ok to place a bet or hit cancel to end the game!',...
+           selection = uiconfirm(fig2,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to end the game!",...
             'No Bet!');
         switch selection
             case 'OK'
