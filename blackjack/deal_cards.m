@@ -34,11 +34,9 @@ pot_size = uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
 
 
 x = 30;
-y = 30;
+y = 25;
 function [] = initial_deal() %This is where the GAME IS PLAYED. ALL user action e.g standing, hitting etc. Starts and ends HERE
 % Initial Deal
-x = 30;
-y = 25;
 card_1 = uiimage(fig1, 'Position', [575 30 105 140]);
                 [card_1.ImageSource, user.card_val] = cards();
                    
