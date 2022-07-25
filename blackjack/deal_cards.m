@@ -8,11 +8,6 @@ function user_return = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout
 %       balance
 %       current_bet_label
 %       current_bet
-%       btn_25
-%       btn_50
-%       btn_100
-%       btn_500
-%       btn_1000
 %       clr_bet_btn
 %       restart_btn
 %       cashout_btn
@@ -112,10 +107,12 @@ end
                user_return = user;
                uiresume(fig1);
                gone_bust;
-            
-              
-            
-               
+            elseif user.card_val == 21
+                    uiresume(fig1);
+                    user.card_val = 0;
+                    user.chips = user.curr_bet * 1.5;
+                    user.curr_bet = 0;
+                   
                     
             end
              
