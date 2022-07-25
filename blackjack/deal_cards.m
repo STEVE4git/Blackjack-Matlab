@@ -110,9 +110,9 @@ end
                user.card_val = 0;
                user.curr_bet = 0;
                user_return = user;
-             
                uiresume(fig1);
-               clf('reset');
+               gone_bust;
+            
               
             
                
@@ -121,12 +121,51 @@ end
              
     end
 
+    function [] = gone_bust
+        
+         if 0 < user.money      
+           goto_cashier = uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
+                          'FontSize', 16, 'FontWeight', 'bold',         ...
+                       'Position', [760 340 400 200], 'Text', 'Want to buy more chips?', ...
+                          'ButtonPushedFcn', {@call_cashier});
+         end
+            if 0 < user.chips
+            goto_table =  uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
+                          'FontSize', 26, 'FontWeight', 'bold','Backgroundcolor','r',         ...
+                       'Position', [760 540 400 200], 'Text', 'Want to play again?', ...
+                          'ButtonPushedFcn', {@call_table});
+            end      
+                         
 
+            quit =  uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
+                          'FontSize', 16, 'FontWeight', 'bold',         ...
+                       'Position', [760 140 400 200], 'Text', 'Exit', ...
+                          'ButtonPushedFcn', @quit_game);
+                        
+        
+       
+           
+
+
+        end
+   
+       function call_cashier(~,~)
+                cashier(user,chip_val,fig1);
+        
+               
+       end
+        function call_table(~,~)
+                 
+                  the_table(user,chip_val,fig1);
+              end
+  function quit_game(~,~)
+                          exit;
+  end
 
 
     function [] = hold(~,~)
          uiresume(fig1);
-          clf('reset');
+        
         
                
 %         dealer_turn;
@@ -202,11 +241,10 @@ function [string, val] = cards
                 val = 10;
         end
         string = strcat(suit,num); % Provides the full filepath to open the card and render it 
+end  
         
-end
 
 
-initial_deal();
-clf('reset');
+initial_deal;
 user_return = user;
 end

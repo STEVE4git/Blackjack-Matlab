@@ -114,50 +114,15 @@ deal_btn = uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             user.chips = user.chips - temp_chips_bet;
             user.curr_bet = temp_chips_bet;
             user = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn, fig1,user,chip_val);
-            clf('reset');
-           if 0 < user.money      
-           goto_cashier = uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
-                          'FontSize', 16, 'FontWeight', 'bold',         ...
-                       'Position', [760 340 400 200], 'Text', 'Want to buy more chips?', ...
-                          'ButtonPushedFcn', {@call_cashier});
-           end
-            if 0 < user.chips
-            goto_table =  uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
-                          'FontSize', 26, 'FontWeight', 'bold','Backgroundcolor','r',         ...
-                       'Position', [760 540 400 200], 'Text', 'Want to play again?', ...
-                          'ButtonPushedFcn', {@call_table});
-            end      
-                         
-
-            quit =  uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
-                          'FontSize', 16, 'FontWeight', 'bold',         ...
-                       'Position', [760 140 400 200], 'Text', 'Exit', ...
-                          'ButtonPushedFcn', @quit_game);
-                        
-        
-          else
-           selection = uiconfirm(fig1,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to exit!",...
+        else
+          selection = uiconfirm(fig1,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to exit!",...
             'No Bet!');
         switch selection
             case 'OK'
             case 'Cancel'
                 exit;
         end
-
-
         end
     end
-       function call_cashier(~,~)
-                cashier(user,chip_val,fig1);
-        
-               
-       end
-        function call_table(~,~)
-                 
-                  the_table(user,chip_val,fig1);
-              end
-  function quit_game(~,~)
-                          exit;
-                          end
     
 end
