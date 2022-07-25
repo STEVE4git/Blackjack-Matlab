@@ -1,24 +1,15 @@
-function Table(Play_Btn, Chips, Chip_Val, Start_Bal)
+function Table(user)
 % Doge_Blackjack initiates a uifigure (fig3) and the Blackjack game 
 % environment. Doge_Blackjack incorporates features such as
 % multiple betting options, balance tracking, restart, and cashout/exit.
 %   Input arguements
-%       Play_Btn
-%       Chips
-%       Chip_Val
-%       Start_Bal
+%      user
 %   Output arguements
 %       None
 
-Chip_Bal = Chips * Chip_Val;
 
 
-
-
-Card_1 = uiimage(fig3, 'Position', Position);
-                Card_1.ImageSource = String;
-
-end
+temp_chips_bet = 0;
 
 fig3 = uifigure('Name', 'Doge Blackjack',                               ...
                     'Position', [128 56 1280 720],                      ...
@@ -44,7 +35,7 @@ Balance = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],               ...
                            'FontColor', [.15 .7 0],                     ...
                            'HorizontalAlignment', 'center',             ...
                            'BackgroundColor', [0.1 0.1 0.1],            ...
-                           'Position', [250 650 86 22], 'Value', Chip_Bal);
+                           'Position', [250 650 86 22], 'Value', user.money);
  
 
     % Chip label
@@ -63,30 +54,7 @@ Chip_Qty = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],         ...
                                  'BackgroundColor', [0.1 0.1 0.1],      ...
                                  'FontSize', 16,                        ...
                                  'FontColor', [.8 .8 .8]);
-                                Chip_Qty.Value = Chips;
-
-
-    % Button allowing user to buy more chips during gameplay if desired
-Restart_Btn = uibutton(fig3, 'push', ...
-                                'BackgroundColor', [0.15 0.15 0.15],    ...
-                                'FontSize', 14, 'FontWeight', 'bold',   ...
-                                'FontColor', [.8 .8 .8],                ...
-                                'Position', [380 613 85 26],           ...
-                                'Text', 'Restart',                      ...
-                         'ButtonPushedFcn', @(Restart_Btn, event)       ...
-                                 Restart());
-
-    function [] = Restart()
-        uiconfirm(fig3, 'Leaving will reset your balance. Do you wish to continue?', ...
-                        'Restart', 'Icon', 'warning', 'CloseFcn', @Restart_Game);
-    end
-
-    function Restart_Game(src, event)
-        if event.SelectedOption == "OK"
-            close(fig3);
-            Cashier;
-        end
-    end
+                                Chip_Qty.Value = user.chips;
 
 Cashout_Btn = uibutton(fig3, 'push', 'FontSize', 14,                    ...
                                      'FontWeight', 'bold',              ...
@@ -123,108 +91,17 @@ Current_Bet = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],          ...
                             [265 525 108 24], 'Value', 0);
 
 
-    %Bet 1 Chip
-Btn_25 = uibutton(fig3, 'push', 'BackgroundColor', [0.05 0.25 0.0],     ...
-                           'Position', [100 450 64 56], 'Text', '',     ...
-                          'ButtonPushedFcn', @(Btn_25, event)           ...
-                           Bet25(Btn_25,Chip_Qty, Current_Bet));   
-       Btn_25.Icon = 'buttons\single25.png';
+ Bet_spinner = uispinner(fig3, 'Position', [510 218 65 22],           ...
+          'Limits', [1 user.chips], 'ValueChangedFcn', @(Bet_spinner,event)...
+            start_betting(Bet_spinner));
 
-    function Bet25(Btn_25, Chip_Qty, Current_Bet)
-            if Chip_Qty.Value >= 1
-                Current_Bet.Value = Current_Bet.Value + 1;
-                Chip_Qty.Value = Chip_Qty.Value - 1;
-            end
+function start_betting(Bet_spinner)
 
-    end
+temp_chips_bet = Bet_spinner.Value;
+Current_Bet.Value = Bet_spinner.Value;
 
-    %Bet 2 chips
-Btn_50 = uibutton(fig3, 'push', 'BackgroundColor', [0.05 0.25 0.0],     ...
-                           'Position', [185 450 64 56], 'Text', '',     ...
-                           'ButtonPushedFcn', @(Btn_50, event)          ...
-                           Bet50(Btn_50, Chip_Qty, Current_Bet));
-       Btn_50.Icon = 'buttons\single50.png';
+end
 
-    function Bet50(Btn_50, Chip_Qty, Current_Bet)
-            if Chip_Qty.Value >= 2
-                Current_Bet.Value = Current_Bet.Value + 2;
-                Chip_Qty.Value = Chip_Qty.Value - 2;
-
-            else
-                Current_Bet.Value = Current_Bet.Value + Chip_Qty.Value;
-                Chip_Qty.Value = 0;
-                
-            end
-    end
-
-    %Bet 4 chips
-Btn_100 = uibutton(fig3, 'push', 'BackgroundColor', [0.05 0.25 0.0],    ...
-                            'Position', [270 450 64 56], 'Text', '',    ...
-                            'ButtonPushedFcn', @(Btn_100, event)        ...
-                           Bet100(Btn_100, Chip_Qty, Current_Bet));  
-       Btn_100.Icon = 'buttons\single100.png';
-
-    function Bet100(Btn_100, Chip_Qty, Current_Bet)
-            if Chip_Qty.Value >= 4
-                Current_Bet.Value = Current_Bet.Value + 4;
-                Chip_Qty.Value = Chip_Qty.Value - 4;
-                
-            else
-                Current_Bet.Value = Current_Bet.Value + Chip_Qty.Value;
-                Chip_Qty.Value = 0;
-
-            end
-    end
-
-    %Bet 20 chips
-Btn_500 = uibutton(fig3, 'push', 'BackgroundColor', [0.05 0.25 0.0],    ...
-                            'Position', [355 450 64 56], 'Text', '',    ...
-                            'ButtonPushedFcn', @(Btn_500, event)        ...
-                  Bet500(Btn_500, Chip_Qty, Current_Bet));  
-       Btn_500.Icon = 'buttons\single500.png';
-
-    function Bet500(Btn_500, Chip_Qty, Current_Bet)
-            if Chip_Qty.Value >= 20
-                Current_Bet.Value = Current_Bet.Value + 20;
-                Chip_Qty.Value = Chip_Qty.Value - 20;
-
-            else
-                Current_Bet.Value = Current_Bet.Value + Chip_Qty.Value;
-                Chip_Qty.Value = 0;
-
-            end
-    end
-
-    %Bet 40 chips
-Btn_1000 = uibutton(fig3, 'push', 'BackgroundColor', [0.05 0.25 0.0],   ...
-                             'Position', [440 450 64 56], 'Text', '',   ...
-                             'ButtonPushedFcn', @(Btn_1000, event)      ...
-                  Bet1000(Btn_1000, Chip_Qty, Current_Bet)); 
-       Btn_1000.Icon = 'buttons\single1000.png';
-
-    function Bet1000(Btn_1000, Chip_Qty, Current_Bet)
-            if Chip_Qty.Value >= 40
-                Current_Bet.Value = Current_Bet.Value + 40;
-                Chip_Qty.Value = Chip_Qty.Value - 40;
-
-            else
-                Current_Bet.Value = Current_Bet.Value + Chip_Qty.Value;
-                Chip_Qty.Value = 0;
-
-            end
-    end
-
-Clr_Bet_Btn = uibutton(fig3, 'push', 'FontSize', 14, 'FontWeight',      ...
-                                 'bold', 'FontColor', [1 1 1],          ...
-                                 'BackgroundColor', [0.15 0.15 0.15],   ...
-                       'Position', [385 524 96 26], 'Text', 'CLEAR BET',...
-                                'ButtonPushedfcn', @(Clr_Bet_Btn, event)...
-                                Clr_Bet(Clr_Bet_Btn, Current_Bet, Chip_Qty));
-
-    function Clr_Bet(Clr_Bet_Btn, Current_Bet, Chip_Qty)
-        Chip_Qty.Value = Chip_Qty.Value + Current_Bet.Value;
-        Current_Bet.Value = 0;
-    end
 
 Deal_Btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                           'FontSize', 16, 'FontWeight', 'bold',         ...
@@ -234,9 +111,42 @@ Deal_Btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
 
     function [] = Deal_Lim(Deal_Btn, Current_Bet)
         if Current_Bet.Value > 0
-            Deal_Cards(Deal_Btn, Balance, Current_Bet_Label,            ...
+            user.chips = user.chips - temp_chips_bet*chip_val;
+            user.curr_bet = Current_Bet.Value;
+            user = Deal_Cards(Deal_Btn, Balance, Current_Bet_Label,            ...
                     Current_Bet, Btn_25, Btn_50, Btn_100, Btn_500,      ...
-                    Btn_1000, Clr_Bet_Btn, Restart_Btn, Cashout_Btn, fig3);
+                    Btn_1000, Clr_Bet_Btn, Restart_Btn, Cashout_Btn, fig3,user);
+            close(fig3);
+            restart_game = uifigure('Name', 'Doge Blackjack',                               ...
+                    'Position', [128 56 1280 720],                      ...
+                    'Color', 'black', 'Pointer','hand', 'Visible', 'off');
+           goto_cashier = uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
+                          'FontSize', 16, 'FontWeight', 'bold',         ...
+                       'Position', [250 375 96 30], 'Text', 'Want to buy more chips?', ...
+                          'ButtonPushedFcn', @(goto_cashier, event)call_cashier(goto_cashier, event));
+                          function call_cashier(deal_btn, event)
+                          Cashier(user);
+                          end
+
+            goto_table =  uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
+                          'FontSize', 16, 'FontWeight', 'bold',         ...
+                       'Position', [250 375 96 30], 'Text', 'Want to play again?', ...
+                          'ButtonPushedFcn', @(goto_table, event)call_table(goto_table, event));
+                          function call_table(goto_table, event)
+                          Table(user);
+
+                          end
+
+            quit =  uibutton(restart_game, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
+                          'FontSize', 16, 'FontWeight', 'bold',         ...
+                       'Position', [250 375 96 30], 'Text', 'Exit', ...
+                          'ButtonPushedFcn', @(quit, event)quit_game(quit, event));
+                          function quit_game(quit, event)
+                          exit;
+                          end
+
+
+
         end
     end
 

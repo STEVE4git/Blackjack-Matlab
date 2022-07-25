@@ -1,6 +1,6 @@
-function Deal_Cards(Deal_Btn, Balance, Current_Bet_Label, Current_Bet,  ...
+function user = Deal_Cards(Deal_Btn, Balance, Current_Bet_Label, Current_Bet,  ...
         Btn_25, Btn_50, Btn_100, Btn_500, Btn_1000, Clr_Bet_Btn,        ...
-        Restart_Btn, Cashout_Btn, fig3)
+        Restart_Btn, Cashout_Btn, fig3,user)
 % Deal_Cards hides betting and restart options in Doge_Blackjack game 
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player 
@@ -20,7 +20,7 @@ function Deal_Cards(Deal_Btn, Balance, Current_Bet_Label, Current_Bet,  ...
 %       Cashout_Btn
 %       fig3
 %   Output arguements
-%       None
+%       user
    
 Balance.Value = Balance.Value - Current_Bet.Value * 25;
 Deal_Btn.Visible = 'off';
@@ -50,14 +50,13 @@ Pot_Size = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],              ...
 
 
 
-function initial_deal()
+function initial_deal(user)
 dealer_card_val = 0;
 % Initial Deal
 x = 30;
 y = 25;
-
 Card_1 = uiimage(fig3, 'Position', [575 30 105 140]);
-                [Card_1.ImageSource, User.card_val] = Cards();
+                [Card_1.ImageSource, user.card_val] = Cards();
                     disp(Player_Cards);
 
 Dealer_Cards = Cards;
@@ -74,7 +73,7 @@ Val = 0;
     Card_3 = uiimage(fig3, 'Position', [605 30 105 140]);
                 [Card_3.ImageSource, Val] = Cards();
                     disp(Player_Cards);
-User.card_val = User.card_val + Val;
+user.card_val = user.card_val + Val;
 
     pause(0.4)
     Card_4 = uiimage(fig3, 'Position', [625 285 85 115]);
@@ -106,9 +105,8 @@ Hit_Btn = uibutton(fig3, 'push',                                        ...
 end
     function [] = Hit(Hit_Btn)
        [render_string, temp_val] = Cards();
-       User.card_val = User.card_val + temp_val;
+       user.card_val = user.card_val + temp_val;
 
-        pause(0.25)
         NewP_Card = uiimage(fig3, 'Position', [605+x 30 105 140]);
             NewP_Card.ImageSource = render_string;
         
@@ -145,11 +143,6 @@ end
 %             y = y + 25;
 %         end
 %     end
-
-end
-
-
-
 
 function [string, Val] = Cards()
     r = randi([1 4]);
@@ -211,3 +204,4 @@ function [string, Val] = Cards()
         string = Suit+Num; % Provides the full filepath to open the card and render it 
         
     end
+end

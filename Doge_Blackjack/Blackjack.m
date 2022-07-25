@@ -33,8 +33,9 @@ New_Game_Btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
 
     function Begin(New_Game_Btn)
     close(fig1);
-    user = struct('chips',0,'money',5000,'card_val','0');
-    Cashier(New_Game_Btn, user);
+    user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
+    chip_val = 50;
+    Cashier(user,chip_val);
     end
 
 %--------------------------------------------------------------------------
