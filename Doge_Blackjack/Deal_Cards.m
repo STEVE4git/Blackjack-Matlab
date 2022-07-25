@@ -50,10 +50,108 @@ Pot_Size = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],              ...
 
 
 
-rng('shuffle');
-Card_img = 0;
+function initial_deal()
+dealer_card_val = 0;
+% Initial Deal
+x = 30;
+y = 25;
 
-    function [string, Val] = Cards()
+Card_1 = uiimage(fig3, 'Position', [575 30 105 140]);
+                [Card_1.ImageSource, User.card_val] = Cards();
+                    disp(Player_Cards);
+
+Dealer_Cards = Cards;
+
+    pause(0.4)
+    Card_2 = uiimage(fig3, 'Position', [600 285 85 115]);
+                Card_2.ImageSource = 'b1fv.gif';
+
+[,dealer_card_val] = Cards();
+Player_Cards = Player_Cards + Cards;
+Val = 0;
+
+    pause(0.4)
+    Card_3 = uiimage(fig3, 'Position', [605 30 105 140]);
+                [Card_3.ImageSource, Val] = Cards();
+                    disp(Player_Cards);
+User.card_val = User.card_val + Val;
+
+    pause(0.4)
+    Card_4 = uiimage(fig3, 'Position', [625 285 85 115]);
+                [Card_4.ImageSource, Val] = Cards();
+dealer_card_val = dealer_card_val+Val;                
+    pause(0.4)
+
+
+
+Hold_Btn = uibutton(fig3, 'push',                                       ...
+                          'BackgroundColor', [0.05 0.25 0.0],           ...
+                          'Position', [335 265 85 85],                  ...
+                          'FontSize', 18, 'FontWeight', 'bold',         ...
+                          'FontColor', [1 1 1], 'VerticalAlignment',    ...
+                          'Center', 'Text', 'Stand', 'ButtonPushedFcn', ...
+                          @(Hold_Btn, event) Hold(Hold_Btn));
+
+
+Hit_Btn = uibutton(fig3, 'push',                                        ...
+                          'BackgroundColor', [0.05 0.25 0.0],           ...
+                          'Position', [115 265 85 85],                  ...
+                          'FontSize', 18, 'FontWeight', 'bold',         ...
+                          'FontColor', [1 1 1],                         ...
+                          'VerticalAlignment', 'Center',                ...
+                          'Text', 'Hit Me!',                            ...
+                          'ButtonPushedFcn', @(Hit_Btn, event)          ...
+                          Hit(Hit_Btn));
+
+end
+    function [] = Hit(Hit_Btn)
+       [render_string, temp_val] = Cards();
+       User.card_val = User.card_val + temp_val;
+
+        pause(0.25)
+        NewP_Card = uiimage(fig3, 'Position', [605+x 30 105 140]);
+            NewP_Card.ImageSource = render_string;
+        
+
+        x = x + 30;
+
+            if Player_Cards > 21
+                Bust = uilabel(fig3, 'FontSize', 40, 'FontColor',               ...
+                   [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
+                   'Position', [215 365 107 53], 'BackgroundColor',     ...
+                   [0.1 0.1 0.1], 'Text', 'Bust!');
+            Hit_Btn.Visible = 'off';
+            Hold_Btn.Visible = 'off';
+
+            end
+
+
+    end
+
+
+    function [] = Hold(Hold_Btn)
+        Hit_Btn.Visible = 'off';
+%         Dealer_Turn;
+    end
+    
+%     function [] = Dealer_Turn(Hold_Btn)
+%         while Dealer_Cards < 17
+%             Dealer_Cards = Dealer_Cards + Cards;
+% 
+%             pause(0.25)
+%             NewD_Card = uiimage(fig3, 'Position', [625+y 285 85 115]);
+%                 NewD_Card.ImageSource = Card_img;
+%         
+%             y = y + 25;
+%         end
+%     end
+
+end
+
+
+
+
+function [string, Val] = Cards()
     r = randi([1 4]);
     c = randi([1 13]); 
    
@@ -113,93 +211,3 @@ Card_img = 0;
         string = Suit+Num; % Provides the full filepath to open the card and render it 
         
     end
-
-% Initial Deal
-Player_Cards = Cards;
-x = 30;
-y = 25;
-
-    Card_1 = uiimage(fig3, 'Position', [575 30 105 140]);
-                Card_1.ImageSource = Card_img;
-                    disp(Player_Cards);
-
-Dealer_Cards = Cards;
-
-    pause(0.4)
-    Card_2 = uiimage(fig3, 'Position', [600 285 85 115]);
-                Card_2.ImageSource = 'b1fv.gif';
-
-
-Player_Cards = Player_Cards + Cards;
-
-    pause(0.4)
-    Card_3 = uiimage(fig3, 'Position', [605 30 105 140]);
-                Card_3.ImageSource = Card_img;
-                    disp(Player_Cards);
-
-Dealer_Cards = Dealer_Cards + Cards;
-
-    pause(0.4)
-    Card_4 = uiimage(fig3, 'Position', [625 285 85 115]);
-                Card_4.ImageSource = Card_img;
-
-    pause(0.4)
-Hold_Btn = uibutton(fig3, 'push',                                       ...
-                          'BackgroundColor', [0.05 0.25 0.0],           ...
-                          'Position', [335 265 85 85],                  ...
-                          'FontSize', 18, 'FontWeight', 'bold',         ...
-                          'FontColor', [1 1 1], 'VerticalAlignment',    ...
-                          'Center', 'Text', 'Stand', 'ButtonPushedFcn', ...
-                          @(Hold_Btn, event) Hold(Hold_Btn));
-
-
-Hit_Btn = uibutton(fig3, 'push',                                        ...
-                          'BackgroundColor', [0.05 0.25 0.0],           ...
-                          'Position', [115 265 85 85],                  ...
-                          'FontSize', 18, 'FontWeight', 'bold',         ...
-                          'FontColor', [1 1 1],                         ...
-                          'VerticalAlignment', 'Center',                ...
-                          'Text', 'Hit Me!',                            ...
-                          'ButtonPushedFcn', @(Hit_Btn, event)          ...
-                          Hit(Hit_Btn));
-
-
-    function [] = Hit(Hit_Btn)
-        Player_Cards = Player_Cards + Cards;
-
-        pause(0.25)
-        NewP_Card = uiimage(fig3, 'Position', [605+x 30 105 140]);
-            NewP_Card.ImageSource = Card_img;
-                     disp(Player_Cards);
-
-        x = x + 30;
-
-            if Player_Cards > 21
-                Bust = uilabel(fig3, 'FontSize', 40, 'FontColor',               ...
-                   [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
-                   'Position', [215 365 107 53], 'BackgroundColor',     ...
-                   [0.1 0.1 0.1], 'Text', 'Bust!');
-            Hit_Btn.Visible = 'off';
-            Hold_Btn.Visible = 'off';
-            end
-    end
-
-
-    function [] = Hold(Hold_Btn)
-        Hit_Btn.Visible = 'off';
-%         Dealer_Turn;
-    end
-    
-%     function [] = Dealer_Turn(Hold_Btn)
-%         while Dealer_Cards < 17
-%             Dealer_Cards = Dealer_Cards + Cards;
-% 
-%             pause(0.25)
-%             NewD_Card = uiimage(fig3, 'Position', [625+y 285 85 115]);
-%                 NewD_Card.ImageSource = Card_img;
-%         
-%             y = y + 25;
-%         end
-%     end
-
-end

@@ -1,15 +1,11 @@
-function [] = Cashier(New_Game_Btn)
+function [] = Cashier(New_Game_Btn, User)
 % Cashier initiates a uifigure (fig2) prompting Doge Blackjack players to
 % purchase chips.
 %   Input arguements
 %       "New_Game_Btn"
 %   Output arguements
 %       None
-
-Start_Bal = 1000;
-Chips = 0;
-Chip_Val = 25;
-
+chip_val = 50;
 fig2 = uifigure('Name', 'Doge Blackjack - Cashier',                     ...
                     'Position', [215 56 1080 720],                      ...
                     'Color', 'black', 'Pointer','hand', 'Visible', 'off');
@@ -29,7 +25,7 @@ Balance = uieditfield(fig2, 'numeric', 'Limits', [0 Inf],               ...
                            'FontColor', [.15 .7 0],                     ...
                            'HorizontalAlignment', 'center',             ...
                            'BackgroundColor', [0.1 0.1 0.1],            ...
-                           'Position', [135 625 70 22], 'Value', Start_Bal);
+                           'Position', [135 625 70 22], 'Value', User.money);
 
 Buy_Chips_Spnr_Lbl = uilabel(fig2, 'BackgroundColor', '#e6e6e6',        ...
                                  'Position', [430 250 315 22],          ...
@@ -37,14 +33,15 @@ Buy_Chips_Spnr_Lbl = uilabel(fig2, 'BackgroundColor', '#e6e6e6',        ...
                                  'HorizontalAlignment', 'Center');
        Buy_Chips_Spnr_Lbl.Text = 'Welcome! How many chips would you like?';
 
-Chip_lim = Balance.Value / Chip_Val;
 
 Buy_Chips_Spnr = uispinner(fig2, 'Position', [510 218 65 22],           ...
-          'Limits', [0 Chip_lim], 'ValueChangedFcn', @(Buy_Chips_Spnr,event)...
+          'Limits', [0 (User.money/chip_cost)], 'ValueChangedFcn', @(Buy_Chips_Spnr,event)...
             Balance_Changing(Balance,Buy_Chips_Spnr));
 
     function Balance_Changing(Balance,Buy_Chips_Spnr)
-        Balance.Value = Start_Bal - Buy_Chips_Spnr.Value * Chip_Val;
+        Balance.Value = User.money - Buy_Chips_Spnr.Value * chip_val;
+        User.chips = Buy_Chips_Spnr.Value;
+        User.money = Balance.Value;
     end
 
 Buy_Max = uibutton(fig2, 'push',                                        ...
@@ -57,8 +54,12 @@ Buy_Max = uibutton(fig2, 'push',                                        ...
                       Max_Chip(Buy_Max, Buy_Chips_Spnr));
 
     function Max_Chip(Buy_Max, Buy_Chips_Spnr)
-        Buy_Chips_Spnr.Value = Start_Bal / Chip_Val;
-        Balance.Value = 0; 
+        total_amount = User.money/chip_val;
+        max_chips_val = floor(total_amount);
+        Buy_Chips_Spnr.Value = max_chips_val;
+        Balance.Value = User.money - max_chips_val*total_amount; 
+        User.money = User.money - max_chips_val*total_amount;
+        User.chips = max_chips_val;
     end
 
 Play_Btn = uibutton(fig2, 'push',                                       ...
@@ -75,7 +76,7 @@ Play_Btn = uibutton(fig2, 'push',                                       ...
         if Buy_Chips_Spnr.Value > 0
             Chips = Buy_Chips_Spnr.Value;
             close(fig2);
-            Table(Play_Btn, Chips, Chip_Val, Start_Bal);
+            Table(Play_Btn, Chips, chip_val, Start_Bal);
         end
     end  
 

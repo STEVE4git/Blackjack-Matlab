@@ -9,6 +9,9 @@ function [] = Blackjack ()
 
 %--------------------------------------------------------------------------
 % Generate Main Start Window
+ rng('shuffle');
+
+
 fig1 = uifigure('Name', 'Doge Blackjack',                               ...
                     'Position', [128 56 1280 720],                      ...
                     'Color', 'black', 'Pointer','hand', 'Visible', 'off');
@@ -30,7 +33,8 @@ New_Game_Btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
 
     function Begin(New_Game_Btn)
     close(fig1);
-    Cashier;
+    user = struct('chips',0,'money',5000,'card_val','0');
+    Cashier(New_Game_Btn, user);
     end
 
 %--------------------------------------------------------------------------

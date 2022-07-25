@@ -12,6 +12,14 @@ function Table(Play_Btn, Chips, Chip_Val, Start_Bal)
 
 Chip_Bal = Chips * Chip_Val;
 
+
+
+
+Card_1 = uiimage(fig3, 'Position', Position);
+                Card_1.ImageSource = String;
+
+end
+
 fig3 = uifigure('Name', 'Doge Blackjack',                               ...
                     'Position', [128 56 1280 720],                      ...
                     'Color', 'black', 'Pointer','hand', 'Visible', 'off');
