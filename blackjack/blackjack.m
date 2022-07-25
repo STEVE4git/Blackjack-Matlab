@@ -19,7 +19,7 @@ fig1 = uifigure('Name', 'Doge Blackjack',                               ...
 %--------------------------------------------------------------------------
 % Generate Main Menu background
 fig_main = uiimage(fig1, 'Position', [250 45 750 701] );
-      fig_main.ImageSource = 'backgrounds\Dogearspalace_animated(1).gif';
+      fig_main.ImageSource = 'backgrounds\main_menu_background.gif';
 
 %--------------------------------------------------------------------------
 % "New Game" push-button
