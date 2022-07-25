@@ -40,15 +40,12 @@ pot_size = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],              ...
 
 
 function [] = initial_deal() %This is where the GAME IS PLAYED. ALL user action e.g standing, hitting etc. Starts and ends HERE
-dealer_card_val = 0;
 % Initial Deal
 x = 30;
 y = 25;
 card_1 = uiimage(fig3, 'Position', [575 30 105 140]);
                 [card_1.ImageSource, user.card_val] = cards();
                    
-
-dealer_cards = cards;
 
     pause(0.4)
     card_2 = uiimage(fig3, 'Position', [600 285 85 115]);
@@ -112,7 +109,7 @@ end
 
 
 
-    function [] = hold(hold_btn)
+    function [] = hold(~,~)
         hit_btn.Visible = 'off';
 %         dealer_turn;
     end
