@@ -1,10 +1,10 @@
 function [] = cashier(user,chip_val)
 % cashier initiates a uifigure (fig2) prompting Doge Blackjack players to
 % purchase chips.
-%   Input arguements
+%   Input arguments
 %       user
 %       chip_val
-%   Output arguements
+%   Output arguments
 %       None
 fig2 = uifigure('Name', 'Doge Blackjack - Cashier',                     ...
                     'Position', [215 56 1080 720],                      ...
@@ -66,26 +66,24 @@ play_btn = uibutton(fig2, 'push',                                       ...
                           'VerticalAlignment', 'Center',                ...
                           'Text', 'Let''s Play!',                       ...
                           'ButtonPushedFcn', @(play_btn, event)         ...
-                          update_val(play_btn, buy_chips_spnr));
+                          update_val(buy_chips_spnr));
 
-    function [] = update_val(play_btn, buy_chips_spnr)
+    function [] = update_val(buy_chips_spnr)
         user.chips = buy_chips_spnr.Value;
-        user.money = balance.Value;
         if user.chips > 0
             close(fig2);
-            table(user, chip_val);
+            the_table(user, chip_val);
         else
             selection = uiconfirm(fig2,'You have no chips! Hit ok to buy chips or hit cancel to end the game!',...
             'No Chips!');
-        switch selection
-            case 'OK'
+            switch selection
+                case 'OK'
                 cashier(user,chip_val);
-            case 'Cancel'
+                case 'Cancel'
                 exit;
-         end
+            end
         end
     end  
-
 fig2.Visible = 'on';
 
 end
