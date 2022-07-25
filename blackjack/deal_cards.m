@@ -1,4 +1,4 @@
-function user_return = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig3,user)
+function user_return = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig3,user,chip_val)
 % deal_cards hides betting and restart options in Doge_Blackjack game 
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player 
@@ -35,10 +35,11 @@ pot_size = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],              ...
                             '%9.0f', 'HorizontalAlignment', 'center',   ...
                             'FontSize', 18, 'FontColor', [1 0.4 0.15],  ...
                            'BackgroundColor', [0.1 0.1 0.1], 'Position',...
-                        [265 525 108 24], 'Value', current_bet.Value * 25);
+                        [265 525 108 24], 'Value', user.chips * chip_val);
 
 
-
+x = 30;
+y = 30;
 function [] = initial_deal() %This is where the GAME IS PLAYED. ALL user action e.g standing, hitting etc. Starts and ends HERE
 % Initial Deal
 x = 30;
@@ -105,6 +106,7 @@ end
             hold_btn.Visible = 'off';
 
             end
+    end
 
 
 
@@ -126,7 +128,7 @@ end
 %         end
 %     end
 
-function [string, val] = cards()
+function [string, val] = cards
     r = randi([1 4]);
     c = randi([1 13]); 
    
@@ -183,10 +185,9 @@ function [string, val] = cards()
                 num = 'k.gif';
                 val = 10;
         end
-        string = suit+num; % Provides the full filepath to open the card and render it 
+        string = strcat(suit,num); % Provides the full filepath to open the card and render it 
         
-        end
-    end
+end
 
 
 initial_deal();
