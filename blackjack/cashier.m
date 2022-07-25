@@ -81,7 +81,7 @@ play_btn = uibutton(fig1, 'push',                                       ...
 
     function [] = update_val(~,~)
         user.chips = user.chips + buy_chips_spnr.Value;
-        user.money = user.money - chip_val*user.chips;
+        user.money = user.money - chip_val*buy_chips_spnr.Value;
         if user.chips > 0
             clf(fig1);
             the_table(user, chip_val,fig1);
