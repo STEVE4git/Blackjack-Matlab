@@ -146,8 +146,6 @@ deal_btn = uibutton(fig3, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             'No Bet!');
         switch selection
             case 'OK'
-                close(fig3);
-                the_table(user,chip_val);
             case 'Cancel'
                 exit;
         end

@@ -81,7 +81,7 @@ play_btn = uibutton(fig2, 'push',                                       ...
                           'ButtonPushedFcn', @update_val);
 
     function [] = update_val(~,~)
-        user.chips = buy_chips_spnr.Value;
+        user.chips = user.chips + buy_chips_spnr.Value;
         user.money = user.money - chip_val*user.chips;
         if user.chips > 0
             close(fig2);
@@ -91,8 +91,6 @@ play_btn = uibutton(fig2, 'push',                                       ...
             'No Chips!');
             switch selection
                 case 'OK'
-                close(fig2);
-                cashier(user,chip_val);
                 case 'Cancel'
                 exit;
             end
