@@ -148,13 +148,13 @@ function [string, val] = cards()
 
         switch r
             case 1
-                suit = 'Doge_Blackjack\cards_gif\s';
+                suit = 'blackjack\cards_gif\s';
             case 2
-                suit = 'Doge_Blackjack\cards_gif\c';
+                suit = 'blackjack\cards_gif\c';
             case 3
-                suit = 'Doge_Blackjack\cards_gif\h';
+                suit = 'blackjack\cards_gif\h';
             case 4
-                suit = 'Doge_Blackjack\cards_gif\d';
+                suit = 'blackjack\cards_gif\d';
         end
 
         switch c
