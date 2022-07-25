@@ -66,11 +66,20 @@ cashout_btn = uibutton(fig3, 'push', 'FontSize', 14,                    ...
                                 'ButtonPushedFcn', @(cashout_btn, event)...
                                  exit());
     function [] = exit()
+    %exit function exit's the user out of the game
+    %Input arguments none
+    %Output arguments none
+    
         uiconfirm(fig3, 'Do you wish to exit the game?',                ...
                     'Exit', 'Icon', 'warning', 'CloseFcn', @exit_game);
     end
 
     function exit_game(src, event)
+    % exit_game checks for mouse click
+    % Input arguments 
+    % src - callback function
+    % event - callback function
+    % Output arguments - none
         if event.SelectedOption == "OK"
             cashout(cashout_btn,user);
         end
@@ -97,6 +106,7 @@ current_bet = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],          ...
             start_betting(bet_spinner));
 
 function start_betting(bet_spinner)
+
 
 temp_chips_bet = bet_spinner.Value;
 current_bet.Value = bet_spinner.Value;
