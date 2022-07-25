@@ -35,7 +35,7 @@ pot_size = uieditfield(fig3, 'numeric', 'Limits', [0 Inf],              ...
                             '%9.0f', 'HorizontalAlignment', 'center',   ...
                             'FontSize', 18, 'FontColor', [1 0.4 0.15],  ...
                            'BackgroundColor', [0.1 0.1 0.1], 'Position',...
-                        [265 525 108 24], 'Value', user.chips * chip_val);
+                        [265 525 108 24], 'Value', user.curr_bet * chip_val);
 
 
 x = 30;
@@ -52,7 +52,7 @@ card_1 = uiimage(fig3, 'Position', [575 30 105 140]);
     card_2 = uiimage(fig3, 'Position', [600 285 85 115]);
                 card_2.ImageSource = 'b1fv.gif';
 
-[NULL,dealer_card_val] = cards();
+[~,dealer_card_val] = cards();
 
     pause(0.4)
     card_3 = uiimage(fig3, 'Position', [605 30 105 140]);
@@ -72,8 +72,9 @@ hold_btn = uibutton(fig3, 'push',                                       ...
                           'BackgroundColor', [0.05 0.25 0.0],           ...
                           'Position', [335 265 85 85],                  ...
                           'FontSize', 18, 'FontWeight', 'bold',         ...
-                          'FontColor', [1 1 1], 'VerticalAlignment','Center','Visible', 'on',    ...
-                           'Text', 'Stand', 'ButtonPushedFcn', ...
+                          'FontColor', [1 1 1], 'VerticalAlignment','Center', ...
+                           'Visible', 'on', 'Text', 'Stand',                            ...
+                            'ButtonPushedFcn', ...
                           @(hold_btn, event) hold(hold_btn,event));
 
 
@@ -87,6 +88,9 @@ hit_btn = uibutton(fig3, 'push',                                        ...
                             'Visible', 'on',                            ...
                         'ButtonPushedFcn', @(hit_btn, event)            ...
                           hit(hit_btn,event));
+                      
+                      
+uiwait(fig3);                      
 end
     function [] = hit(hit_btn,~)
        [render_string, temp_val] = cards();
@@ -103,8 +107,12 @@ end
                    [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
                    'Position', [215 365 107 53], 'BackgroundColor',     ...
                    [0.1 0.1 0.1], 'Text', 'Bust!');
-            hit_btn.Visible = 'off';
-            hold_btn.Visible = 'off';
+               user.card_val = 0;
+               user.curr_bet = 0;
+               user_return = user;
+                uiresume(fig3);
+                close(fig3);
+                    
 
             end
     end
@@ -113,7 +121,8 @@ end
 
 
     function [] = hold(~,~)
-        hit_btn.Visible = 'off';
+        uiresume(fig3);
+                close(fig3);
 %         dealer_turn;
     end
     
