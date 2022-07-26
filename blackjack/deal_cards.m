@@ -194,14 +194,19 @@ end
       
         hold_btn.Visible = 'off';
         hit_btn.Visible = 'off';
-        
+        start_pos = 625+x;
         while dealer_card_val < 17
-           [~,dealer_draw] = cards();
+           [render_string,dealer_draw] = cards();
+            uiimage(fig1, 'Position', [start_pos 285 85 115], 'ImageSource',render_string);
+            start_pos = start_pos+x;
             dealer_card_val = dealer_card_val + dealer_draw;
         end
-        if user.card_val < dealer_card_val
+        if 21 < dealer_card_val
             user.card_val = 0;
-            user.curr_bet = 0;
+            user.chips = user.chips+ user.curr_bet*2;
+            gone_bust(user.curr_bet);
+        elseif user.card_val < dealer_card_val
+            user.card_val = 0;
             gone_bust(user.curr_bet*-1);
         elseif push(user.card_val, dealer_card_val)
             user.card_val = 0;
