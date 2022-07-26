@@ -48,7 +48,7 @@ quit_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
                             'ButtonPushedFcn', @(quit_btn, event) quit_game);
       quit_btn.Icon='buttons\quitgame.png';
 
-    function quit_game(quit_btn)
+    function quit_game(~)
     close(fig1);
     end
 
