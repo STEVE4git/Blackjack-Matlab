@@ -20,7 +20,8 @@ fig1 = uifigure('Name', 'Blackjack',                               ...
 % Generate Main Menu background
 set(0,'units','pixels');
 pix_ss = get(0,'screensize');
-
+user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
+chip_val = 50;
 fig_main = uiimage(fig1, 'Position', pix_ss );
       fig_main.ImageSource = 'backgrounds\main_menu_background.gif';
 
@@ -34,11 +35,20 @@ new_game_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
       new_game_btn.Icon = 'buttons\newgame.png';
 
     function begin(~,~,~)
-    clf(fig1)
-    user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
-    chip_val = 50;
-    cashier(user,chip_val,fig1,pix_ss);
+    clf(fig1);
+    [user,fig1] = cashier(user,chip_val,fig1,pix_ss);
+    [user,fig1,deal_btn,current_bet_label,bet_spinner,cashout_btn] = the_table(user,chip_val,fig1,pix_ss);
+    [user,fig1,goto_what] = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val);
+    while true
+    switch goto_what
+        case 1
+           [user, fig1] = cashier(user,chip_val,fig1,pix_ss);
+        case 2
+            [user,fig1,deal_btn,current_bet_label,bet_spinner,cashout_btn] = the_table(user,chip_val,fig1,pix_ss);
+            [user,fig1,goto_what] = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val);
     end
+    end
+   end
 
 %--------------------------------------------------------------------------
 % "Quit" push-button

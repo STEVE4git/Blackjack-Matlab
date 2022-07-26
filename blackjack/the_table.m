@@ -1,4 +1,4 @@
-function [] = the_table(user,chip_val,fig1,pix_ss)
+function [user_return,fig1_return,deal_btn_return,current_bet_label_return,bet_spinner_return,cashout_btn_return] = the_table(user,chip_val,fig1,pix_ss)
 % Doge_Blackjack initiates a uifigure (fig1) and the Blackjack game 
 % environment. Doge_Blackjack incorporates features such as
 % multiple betting options, balance tracking, restart, and cashout/exit.
@@ -111,10 +111,17 @@ uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                           deal_lim(deal_btn,event));
 
     function [] = deal_lim(deal_btn,~)
+        
         if temp_chips_bet > 0
             user.chips = user.chips - temp_chips_bet;
             user.curr_bet = temp_chips_bet;
-            user = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn, fig1,user,chip_val);
+            user_return = user;
+            fig1_return = fig1;
+            deal_btn_return = deal_btn;
+            current_bet_label_return = current_bet_label;
+            bet_spinner_return = bet_spinner;
+            cashout_btn_return = cashout_btn;
+            uiresume(fig1);
         else
           selection = uiconfirm(fig1,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to exit!",...
             'No Bet!');
@@ -125,5 +132,5 @@ uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
         end
         end
     end
-    
+ uiwait(fig1);   
 end

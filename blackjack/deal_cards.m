@@ -1,4 +1,4 @@
-function user_return = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val)
+function [user_return,fig1_return,goto_what] = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val)
 % deal_cards hides betting and restart options in Doge_Blackjack game 
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player 
@@ -36,6 +36,7 @@ uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
 x = 30;
 dealer_card_val = 0;
 hold_btn = struct();
+did_inital_deal_end = 0;
 function [] = initial_deal() %This is where the GAME IS PLAYED. ALL user action e.g standing, hitting etc. Starts and ends HERE
 % Initial Deal
 card_1 = uiimage(fig1, 'Position', [575 30 105 140]);
@@ -56,35 +57,37 @@ user.card_val = user.card_val + temp_val;
     
     card_4 = uiimage(fig1, 'Position', [625 285 85 115]);
                 [card_4.ImageSource, temp_val] = cards();
+                
 dealer_card_val = dealer_card_val+temp_val;
+
  if push(user.card_val, dealer_card_val)    
     user.card_val = 0;
     user.chips = user.chips+user.curr_bet;
     user.curr_bet = 0;
     user_return = user;
     gone_bust(0);
+    did_inital_deal_end = 1;
  elseif user.card_val == 21
     user.card_val = 0;
     user.chips = user.chips + user.curr_bet +(user.curr_bet* 1.5);
     user_return = user;
     gone_bust(user.curr_bet*1.5);
+    did_inital_deal_end = 1;
  elseif 21 < user.card_val || dealer_card_val == 21
      user.card_val = 0;
      user_return = user;
      gone_bust(user.curr_bet*-1);
+     did_inital_deal_end = 1;
  elseif 21 < dealer_card_val
      user.card_val = 0;
      user.chips = user.chips+ user.curr_bet*2;
      user_return = user;
      gone_bust(user.curr_bet);
+     did_inital_deal_end = 1;
 
 
  end     
-
-
-
-
-
+if ~did_inital_deal_end
 hit_btn = uibutton(fig1, 'push',                                        ...
                           'BackgroundColor', [0.05 0.25 0.0],           ...
                           'Position', [115 265 85 85],                  ...
@@ -101,9 +104,9 @@ hold_btn = uibutton(fig1, 'push',                                       ...
                           'FontColor', [1 1 1], 'VerticalAlignment','Center', ...
                            'Visible', 'on', 'Text', 'Stand',                            ...
                             'ButtonPushedFcn', ...
-                          {@hold, hit_btn});                      
-                      
-                      
+                          {@hold, hit_btn});  
+end
+                   
 uiwait(fig1);
 end
     function is_true = push(user_card_val, dealer_card_val)
@@ -130,19 +133,15 @@ end
                    [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
                    'Position', [215 365 107 53], 'BackgroundColor',     ...
                    [0.1 0.1 0.1], 'Text', 'Bust!');
-               user.card_val = 0;
                
+               user.card_val = 0;
                user_return = user;
                hit_btn.Visible = 'off';
                hold_btn.Visible = 'off';
                gone_bust(user.curr_bet*-1);
-               uiresume(fig1);
-               
-               
-               
-            end
-           
              
+              
+            end    
     end
 
     function [] = gone_bust(chips_result)
@@ -169,20 +168,20 @@ end
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
                           'FontSize', 16, 'FontWeight', 'bold',         ...
                        'Position', [760 140 400 200], 'Text', 'Exit', ...
-                          'ButtonPushedFcn', @quit_game);
-                    
-                      
+                          'ButtonPushedFcn', @quit_game);          
         end
    
        function call_cashier(~,~)
-                pix_ss = get(0,'screensize');
-                cashier(user,chip_val,fig1,pix_ss);
+                
+                goto_what = 1;
+                uiresume(fig1);
         
                
        end
         function call_table(~,~)
-                  pix_ss = get(0,'screensize');
-                  the_table(user,chip_val,fig1,pix_ss);
+                  
+                  goto_what = 2;
+                  uiresume(fig1);
               end
   function quit_game(~,~)
    exit;
@@ -196,8 +195,8 @@ end
         hit_btn.Visible = 'off';
         start_pos = 625+x;
         while dealer_card_val < 17
-           [render_string,dealer_draw] = cards();
-            uiimage(fig1, 'Position', [start_pos 285 85 115], 'ImageSource',render_string);
+           [~,dealer_draw] = cards();
+            uiimage(fig1, 'Position', [start_pos 285 85 115], 'ImageSource','b1fv.gif');
             start_pos = start_pos+x;
             dealer_card_val = dealer_card_val + dealer_draw;
         end
@@ -218,9 +217,8 @@ end
             gone_bust(user.curr_bet);
         end
         
-         uiresume(fig1);
-         
-     
+        
+
     end
     
 function [string, val] = cards
@@ -282,9 +280,8 @@ function [string, val] = cards
         end
         string = strcat(suit,num); % Provides the full filepath to open the card and render it 
 end  
-        
-
 
 initial_deal;
 user_return = user;
+fig1_return = fig1;
 end

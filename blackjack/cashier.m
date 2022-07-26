@@ -1,4 +1,4 @@
-function [] = cashier(user,chip_val,fig1,pix_ss)
+function [user_return,fig1_return] = cashier(user,chip_val,fig1,pix_ss)
 % cashier initiates a uifigure (fig1) prompting Doge Blackjack players to
 % purchase chips.
 %   Input arguments
@@ -84,7 +84,10 @@ uibutton(fig1, 'push',                                       ...
         user.money = user.money - chip_val*buy_chips_spnr.Value;
         if user.chips > 0
             clf(fig1);
-            the_table(user, chip_val,fig1,pix_ss);
+            user_return = user;
+            fig1_return = fig1; 
+            uiresume(fig1);
+           
         else
             selection = uiconfirm(fig1,'You have no chips! Hit ok to buy chips or hit cancel to end the game!',...
             'No Chips!');
@@ -96,5 +99,5 @@ uibutton(fig1, 'push',                                       ...
         end
     end  
 fig1.Visible = 'on';
-
+uiwait(fig1);
 end
