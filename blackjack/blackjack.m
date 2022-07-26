@@ -18,10 +18,9 @@ fig1 = uifigure('Name', 'Blackjack',                               ...
 
 %--------------------------------------------------------------------------
 % Generate Main Menu background
-%Sets the units of your root object (screen) to pixels
 set(0,'units','pixels');
-%Obtains this pixel information
 pix_ss = get(0,'screensize');
+
 fig_main = uiimage(fig1, 'Position', pix_ss );
       fig_main.ImageSource = 'backgrounds\main_menu_background.gif';
 

@@ -5,6 +5,7 @@ function [] = the_table(user,chip_val,fig1,pix_ss)
 %   Input arguments
 %      user
 %      chip_val
+%      fig 1
 %   Output arguments
 %       None
 

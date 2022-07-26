@@ -3,7 +3,7 @@ function user_return = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player 
 % and the dealer.
-%   Input arguements
+%   Input arguments
 %       deal_btn
 %       balance
 %       current_bet_label
@@ -34,7 +34,8 @@ pot_size = uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
 
 
 x = 30;
-y = 25;
+dealer_card_val = 0;
+hold_btn = struct();
 function [] = initial_deal() %This is where the GAME IS PLAYED. ALL user action e.g standing, hitting etc. Starts and ends HERE
 % Initial Deal
 card_1 = uiimage(fig1, 'Position', [575 30 105 140]);
@@ -52,23 +53,36 @@ card_1 = uiimage(fig1, 'Position', [575 30 105 140]);
                 [card_3.ImageSource, temp_val] = cards();
                   
 user.card_val = user.card_val + temp_val;
-
     
     card_4 = uiimage(fig1, 'Position', [625 285 85 115]);
                 [card_4.ImageSource, temp_val] = cards();
-dealer_card_val = dealer_card_val+temp_val;                
-   
+dealer_card_val = dealer_card_val+temp_val;
+ if push(user.card_val, dealer_card_val)    
+    user.card_val = 0;
+    user.chips = user.chips+user.curr_bet;
+    user.curr_bet = 0;
+    user_return = user;
+    gone_bust(0);
+ elseif user.card_val == 21
+    user.card_val = 0;
+    user.chips = user.chips + user.curr_bet +(user.curr_bet* 1.5);
+    user_return = user;
+    gone_bust(user.curr_bet*1.5);
+ elseif 21 < user.card_val || dealer_card_val == 21
+     user.card_val = 0;
+     user_return = user;
+     gone_bust(user.curr_bet*-1);
+ elseif 21 < dealer_card_val
+     user.card_val = 0;
+     user.chips = user.chips+ user.curr_bet*2;
+     user_return = user;
+     gone_bust(user.curr_bet);
+
+
+ end     
 
 
 
-hold_btn = uibutton(fig1, 'push',                                       ...
-                          'BackgroundColor', [0.05 0.25 0.0],           ...
-                          'Position', [335 265 85 85],                  ...
-                          'FontSize', 18, 'FontWeight', 'bold',         ...
-                          'FontColor', [1 1 1], 'VerticalAlignment','Center', ...
-                           'Visible', 'on', 'Text', 'Stand',                            ...
-                            'ButtonPushedFcn', ...
-                          @(hold_btn, event) hold(hold_btn,event));
 
 
 hit_btn = uibutton(fig1, 'push',                                        ...
@@ -79,18 +93,33 @@ hit_btn = uibutton(fig1, 'push',                                        ...
                           'VerticalAlignment', 'Center',                ...
                           'Text', 'Hit Me!',                            ...
                             'Visible', 'on',                            ...
-                        'ButtonPushedFcn', @(hit_btn, event)            ...
-                          hit(hit_btn,event));
+                        'ButtonPushedFcn', @hit);
+hold_btn = uibutton(fig1, 'push',                                       ...
+                          'BackgroundColor', [0.05 0.25 0.0],           ...
+                          'Position', [335 265 85 85],                  ...
+                          'FontSize', 18, 'FontWeight', 'bold',         ...
+                          'FontColor', [1 1 1], 'VerticalAlignment','Center', ...
+                           'Visible', 'on', 'Text', 'Stand',                            ...
+                            'ButtonPushedFcn', ...
+                          {@hold, hit_btn});                      
                       
                       
 uiwait(fig1);
 end
-    function [] = hit(~,~)
+    function is_true = push(user_card_val, dealer_card_val)
+       if user_card_val == dealer_card_val
+           is_true = 1;
+       else
+           is_true = 0;
+       end
+    end
+    function [] = hit(hit_btn,~)
        [render_string, temp_val] = cards();
        user.card_val = user.card_val + temp_val;
 
         new_card = uiimage(fig1, 'Position', [605+x 30 105 140]);
-            new_card.ImageSource = render_string;
+        new_card.ImageSource = render_string;
+        
         
 
         x = x + 30;
@@ -101,23 +130,25 @@ end
                    'Position', [215 365 107 53], 'BackgroundColor',     ...
                    [0.1 0.1 0.1], 'Text', 'Bust!');
                user.card_val = 0;
-               user.curr_bet = 0;
+               
                user_return = user;
+               hit_btn.Visible = 'off';
+               hold_btn.Visible = 'off';
+               gone_bust(user.curr_bet*-1);
                uiresume(fig1);
-               gone_bust;
-            elseif user.card_val == 21
-                    uiresume(fig1);
-                    user.card_val = 0;
-                    user.chips = user.curr_bet * 1.5;
-                    user.curr_bet = 0;
-                   
-                    
+               
             end
+           
              
     end
 
-    function [] = gone_bust
-        
+    function [] = gone_bust(chips_result)
+         if 1 < chips_result
+             %Put a picture here saying they won x amount
+         else
+             %Put something here saying they lost x amoun
+         end
+         user.curr_bet = 0;
          if 0 < user.money      
            goto_cashier = uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ... 
                           'FontSize', 16, 'FontWeight', 'bold',         ...
@@ -155,30 +186,39 @@ end
                   the_table(user,chip_val,fig1,pix_ss);
               end
   function quit_game(~,~)
-                          exit;
+   exit;
   end
 
 
-    function [] = hold(~,~)
+    function [] = hold(hold_btn,~,hit_btn)
+        
+      
+        hold_btn.Visible = 'off';
+        hit_btn.Visible = 'off';
+        
+        while dealer_card_val < 17
+           [~,dealer_draw] = cards();
+            dealer_card_val = dealer_card_val + dealer_draw;
+        end
+        if user.card_val < dealer_card_val
+            user.card_val = 0;
+            user.curr_bet = 0;
+            gone_bust(user.curr_bet*-1);
+        elseif push(user.card_val, dealer_card_val)
+            user.card_val = 0;
+            user.chips = user.chips+user.curr_bet;
+            gone_bust(0);
+        elseif dealer_card_val < user.card_val
+            user.card_val = 0;
+            user.chips = user.chips + user.curr_bet*2;
+            gone_bust(user.curr_bet);
+        end
+        
          uiresume(fig1);
-        
-        
-               
-%         dealer_turn;
+         
+     
     end
     
-%     function [] = dealer_turn(hold_btn)
-%         while dealer_cards < 17
-%             dealer_cards = dealer_cards + cards;
-% 
-%           
-%             newd_card = uiimage(fig1, 'Position', [625+y 285 85 115]);
-%                 [newd_card.ImageSource, NULL] = cards();
-%         
-%             y = y + 25;
-%         end
-%     end
-
 function [string, val] = cards
     r = randi([1 4]);
     c = randi([1 13]); 
