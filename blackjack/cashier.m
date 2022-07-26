@@ -83,7 +83,7 @@ uibutton(fig1, 'push',                                       ...
         user.chips = user.chips + buy_chips_spnr.Value;
         user.money = user.money - chip_val*buy_chips_spnr.Value;
         
-        if user.chips > 0 && 1 <= buy_chips_spnr.Value 
+        if user.chips > 0
             user_return = user;
             fig1_return = fig1; 
             goto_what_return = 2;
