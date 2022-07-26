@@ -42,7 +42,7 @@ new_game_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
     while true
     switch goto_what
         case 1
-           [user, fig1] = cashier(user,chip_val,fig1,pix_ss);
+           [user, fig1, goto_what] = cashier(user,chip_val,fig1,pix_ss);
         case 2
             [user,fig1,deal_btn,current_bet_label,bet_spinner,cashout_btn] = the_table(user,chip_val,fig1,pix_ss);
             [user,fig1,goto_what] = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val);
