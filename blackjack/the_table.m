@@ -1,4 +1,4 @@
-function [] = the_table(user,chip_val,fig1)
+function [] = the_table(user,chip_val,fig1,pix_ss)
 % Doge_Blackjack initiates a uifigure (fig1) and the Blackjack game 
 % environment. Doge_Blackjack incorporates features such as
 % multiple betting options, balance tracking, restart, and cashout/exit.
@@ -15,7 +15,7 @@ temp_chips_bet = 0;
 
     % Generates Blackjack table and dealer graphics.
 fig_start = uiimage(fig1, 'BackgroundColor', 'Black',                   ...
-                         'Position', [0 0 1920 1080]);
+                         'Position', pix_ss);
        fig_start.ImageSource = 'backgrounds\Main.jpeg';
 
     % balance appears in top left corner

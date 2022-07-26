@@ -145,13 +145,14 @@ end
         end
    
        function call_cashier(~,~)
-                cashier(user,chip_val,fig1);
+                pix_ss = get(0,'screensize');
+                cashier(user,chip_val,fig1,pix_ss);
         
                
        end
         function call_table(~,~)
-                 
-                  the_table(user,chip_val,fig1);
+                  pix_ss = get(0,'screensize');
+                  the_table(user,chip_val,fig1,pix_ss);
               end
   function quit_game(~,~)
                           exit;

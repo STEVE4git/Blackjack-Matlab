@@ -18,7 +18,11 @@ fig1 = uifigure('Name', 'Blackjack',                               ...
 
 %--------------------------------------------------------------------------
 % Generate Main Menu background
-fig_main = uiimage(fig1, 'Position', [0 0 1920 1080] );
+%Sets the units of your root object (screen) to pixels
+set(0,'units','pixels');
+%Obtains this pixel information
+pix_ss = get(0,'screensize');
+fig_main = uiimage(fig1, 'Position', pix_ss );
       fig_main.ImageSource = 'backgrounds\main_menu_background.gif';
 
 %--------------------------------------------------------------------------
@@ -34,7 +38,7 @@ new_game_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
     clf(fig1)
     user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
     chip_val = 50;
-    cashier(user,chip_val,fig1);
+    cashier(user,chip_val,fig1,pix_ss);
     end
 
 %--------------------------------------------------------------------------
