@@ -1,13 +1,14 @@
-function [] = cashout(cashout_btn,user)
-% Cashout prompts users Blackjack to confirm exit upon selecting
-% "Cashout and Exit" option during gameplay. Confirmation generates a
-% uifigure (End_Fig) which displays the user's winnings or losses prior to
+function cashout(cashout_btn,~,user)
+% cashout is called upon confirming that the user wants to exit the game
+% cashout displays the users current money added to their chips
+% This is called by the "Cashout and Exit" button during gameplay. Confirmation generates a
+% screen displaying the users balance
 % ending the game.
-%   Input arguements
-%       Cashout_Btn
-%       Chip_Bal
-%       Start_Bal
-%   Output arguements
+%   Input argument:
+%       cashout_btn -> The button that is passed by the callback
+%       Discarded
+%       user -> The users current data
+%   Output arguments
 %       None
 
 end_fig = uifigure('Name', 'Blackjack - Goodbye!',         ...
