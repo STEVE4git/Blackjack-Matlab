@@ -62,23 +62,25 @@ cashout_btn = uibutton(fig1, 'push', 'FontSize', 14,                    ...
     'FontColor', [.15 .7 0],           ...
     'Position', [pix_ss(3)*.1 pix_ss(4)*.5 pix_ss(3)*.15 pix_ss(4)*.03],      ...
     'Text', 'CASHOUT AND EXIT',        ...
-    'ButtonPushedFcn', @(cashout_btn, event)...
-    exit());
-    function exit
-        %exit function exit's the user out of the game
-        %Input arguments none
-        %Output arguments none
+    'ButtonPushedFcn', @exit_callback);
+    function exit_callback(~,~)
+        % exit_callback function brings up a dialog prompt asking if the user wants to cashout
+        % Input arguments:
+        %       None
+        % Output arguments:
+        %       None
         
         uiconfirm(fig1, 'Do you wish to exit the game?',                ...
             'Exit', 'Icon', 'warning', 'CloseFcn', @exit_game);
     end
 
     function exit_game(~, event)
-        % exit_game checks for mouse click
-        % Input arguments
-        % src - callback function
-        % event - callback function
-        % Output arguments - none
+        % exit_game is a callback function that checks if the user wishes to exit
+        % Input arguments:
+        %       Discarded
+        %       event -> The callback event used to check if they selected ok
+        % Output arguments:
+        %       None
         if event.SelectedOption == "OK"
             cashout(cashout_btn,user);
         end
