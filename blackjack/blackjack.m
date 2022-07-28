@@ -37,15 +37,15 @@ new_game_btn.Icon = 'buttons\newgame.png';
     function begin(~,~,~)
         clf(fig1);
         [user,fig1] = cashier(user,chip_val,fig1,pix_ss);
-        [user,fig1,deal_btn,current_bet_label,bet_spinner,cashout_btn] = the_table(user,chip_val,fig1,pix_ss);
-        [user,fig1,goto_what] = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val);
+        [user,fig1] = the_table(user,fig1,pix_ss);
+        [user,fig1,goto_what] = deal_cards(fig1,user,chip_val,pix_ss);
         while true
             switch goto_what
                 case 1
                     [user, fig1, goto_what] = cashier(user,chip_val,fig1,pix_ss);
                 case 2
-                    [user,fig1,deal_btn,current_bet_label,bet_spinner,cashout_btn] = the_table(user,chip_val,fig1,pix_ss);
-                    [user,fig1,goto_what] = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val);
+                    [user,fig1] = the_table(user,fig1,pix_ss);
+                    [user,fig1,goto_what] = deal_cards(fig1,user,chip_val,pix_ss);
             end
         end
     end

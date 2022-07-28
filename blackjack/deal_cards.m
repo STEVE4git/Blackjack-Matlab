@@ -1,4 +1,4 @@
-function [user_return,fig1_return,goto_what] = deal_cards(deal_btn,current_bet_label,bet_spinner,cashout_btn,fig1,user,chip_val)
+function [user_return,fig1_return,goto_what] = deal_cards(fig1,user,chip_val,pix_ss)
 % deal_cards hides betting and restart options in Doge_Blackjack game
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player
@@ -15,47 +15,44 @@ function [user_return,fig1_return,goto_what] = deal_cards(deal_btn,current_bet_l
 %   Output arguements
 %       user_return
 
-deal_btn.Visible = 'off';
-cashout_btn.Visible = 'off';
-current_bet_label.Visible = 'off';
-bet_spinner.Visible = 'off';
 
-uilabel(fig1, 'HorizontalAlignment', 'right',          ...
+
+uilabel(fig1, 'HorizontalAlignment', 'center',          ...
     'VerticalAlignment', 'center', 'Fontsize',...
     18, 'FontColor', [1 0.4 0.15], 'Position',...
-    [165 525 90 23], 'Text', 'Pot Size  $');
+    [pix_ss(3)*.05 pix_ss(4)*.5 pix_ss(3)*.1 pix_ss(4)*.03], 'Text', 'Pot Size  $');
 
 uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
     'Editable', 'off', 'ValueDisplayFormat',    ...
     '%9.0f', 'HorizontalAlignment', 'center',   ...
     'FontSize', 18, 'FontColor', [1 0.4 0.15],  ...
     'BackgroundColor', [0.1 0.1 0.1], 'Position',...
-    [265 525 108 24], 'Value', user.curr_bet * chip_val);
+    [pix_ss(3)*.15 pix_ss(4)*.5 pix_ss(3)*.1 pix_ss(4)*.03], 'Value', user.curr_bet * chip_val);
 
 
 
 dealer_card_val = 0;
 hold_btn = struct();
-
+dealer_x = pix_ss(3)*.1;
 did_inital_deal_end = 0;
-x = 30;
-card_1 = uiimage(fig1, 'Position', [575 30 105 140]);
+x = pix_ss(3)*.1;
+card_1 = uiimage(fig1, 'Position', [pix_ss(3)*.5 pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_1.ImageSource, user.card_val] = cards();
 
 
 
-card_2 = uiimage(fig1, 'Position', [600 285 85 115]);
+card_2 = uiimage(fig1, 'Position', [pix_ss(3)*.5 pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14]);
 card_2.ImageSource = 'b1fv.gif';
 
-[~,dealer_card_val] = cards();
+[card_2_render_string,dealer_card_val] = cards();
 
 
-card_3 = uiimage(fig1, 'Position', [605 30 105 140]);
+card_3 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_3.ImageSource, temp_val] = cards();
 
 user.card_val = user.card_val + temp_val;
 
-card_4 = uiimage(fig1, 'Position', [625 285 85 115]);
+card_4 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_4.ImageSource, temp_val] = cards();
 
 dealer_card_val = dealer_card_val+temp_val;
@@ -65,23 +62,27 @@ if push(user.card_val, dealer_card_val)
     user.chips = user.chips+user.curr_bet;
     user.curr_bet = 0;
     user_return = user;
+    card_2.ImageSource = card_2_render_string;
     gone_bust(0);
     did_inital_deal_end = 1;
 elseif user.card_val == 21
     user.card_val = 0;
     user.chips = user.chips + user.curr_bet +(user.curr_bet* 1.5);
     user_return = user;
+    card_2.ImageSource = card_2_render_string;
     gone_bust(user.curr_bet*1.5);
     did_inital_deal_end = 1;
 elseif 21 < user.card_val || dealer_card_val == 21
     user.card_val = 0;
     user_return = user;
+    card_2.ImageSource = card_2_render_string;
     gone_bust(user.curr_bet*-1);
     did_inital_deal_end = 1;
 elseif 21 < dealer_card_val
     user.card_val = 0;
     user.chips = user.chips+ user.curr_bet*2;
     user_return = user;
+    card_2.ImageSource = card_2_render_string;
     gone_bust(user.curr_bet);
     did_inital_deal_end = 1;
     
@@ -96,7 +97,7 @@ if ~did_inital_deal_end
         'VerticalAlignment', 'Center',                ...
         'Text', 'Hit Me!',                            ...
         'Visible', 'on',                            ...
-        'ButtonPushedFcn', @hit);
+        'ButtonPushedFcn', {@hit,card_2,card_2_render_string});
     hold_btn = uibutton(fig1, 'push',                                       ...
         'BackgroundColor', [0.05 0.25 0.0],           ...
         'Position', [335 265 85 85],                  ...
@@ -104,24 +105,25 @@ if ~did_inital_deal_end
         'FontColor', [1 1 1], 'VerticalAlignment','Center', ...
         'Visible', 'on', 'Text', 'Stand',                            ...
         'ButtonPushedFcn', ...
-        {@hold, hit_btn});
+        {@hold, hit_btn,card_2,card_2_render_string});
 end
 uiwait(fig1);
 
 
-    function [] = hit(hit_btn,~)
+    function [] = hit(hit_btn,~,card_2,card_2_render_string)
         [render_string, temp_val] = cards();
         if user.card_val == 20 && temp_val == 11
             temp_val = 1;
         end
         user.card_val = user.card_val + temp_val;
         
-        new_card = uiimage(fig1, 'Position', [605+x 30 105 140]);
+        new_card = uiimage(fig1, 'Position', [pix_ss(3)*.6+x pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
         new_card.ImageSource = render_string;
+        x = x+x;
         
-        x = x + 30;
         
         if user.card_val > 21
+            card_2.ImageSource = card_2_render_string;
             uilabel(fig1, 'FontSize', 40, 'FontColor',               ...
                 [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
                 'Position', [215 365 107 53], 'BackgroundColor',     ...
@@ -136,16 +138,17 @@ uiwait(fig1);
             
         end
     end
-    function [] = hold(hold_btn,~,hit_btn)
+    function [] = hold(hold_btn,~,hit_btn,card_2,card_2_render_string)
         
         
         hold_btn.Visible = 'off';
         hit_btn.Visible = 'off';
-        dealer_x = 30;
-        start_pos = 625+dealer_x;
+        
+        start_pos = pix_ss(3)*.6;
+        card_2.ImageSource = card_2_render_string;
         while dealer_card_val < 17
-            [~,dealer_draw] = cards();
-            uiimage(fig1, 'Position', [start_pos 285 85 115], 'ImageSource','b1fv.gif');
+            [render_string,dealer_draw] = cards();
+            uiimage(fig1, 'Position', [start_pos+dealer_x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14], 'ImageSource',render_string);
             start_pos = start_pos+dealer_x;
             dealer_card_val = dealer_card_val + dealer_draw;
         end
@@ -181,20 +184,20 @@ uiwait(fig1);
         if 0 < user.money
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                 'FontSize', 16, 'FontWeight', 'bold',         ...
-                'Position', [760 340 400 200], 'Text', 'Want to buy more chips?', ...
+                'Position', [pix_ss(3)*.7 pix_ss(4)*.6 pix_ss(3)*.2 pix_ss(4)*.15], 'Text', 'Want to buy more chips?', ...
                 'ButtonPushedFcn', {@call_cashier});
         end
         if 0 < user.chips
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                 'FontSize', 26, 'FontWeight', 'bold','Backgroundcolor','r',         ...
-                'Position', [760 540 400 200], 'Text', 'Want to play again?', ...
+                'Position', [pix_ss(3)*.7 pix_ss(4)*.5 pix_ss(3)*.2 pix_ss(4)*.15], 'Text', 'Want to play again?', ...
                 'ButtonPushedFcn', {@call_table});
         end
         
         
         uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             'FontSize', 16, 'FontWeight', 'bold',         ...
-            'Position', [760 140 400 200], 'Text', 'Exit', ...
+            'Position', [pix_ss(3)*.7 pix_ss(4)*.4 pix_ss(3)*.2 pix_ss(4)*.15], 'Text', 'Exit', ...
             'ButtonPushedFcn', @quit_game);
     end
 
