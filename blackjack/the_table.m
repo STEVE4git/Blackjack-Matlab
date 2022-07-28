@@ -1,13 +1,13 @@
 function [user_return,fig1_return] = the_table(user,fig1,pix_ss)
-% Doge_Blackjack initiates a uifigure (fig1) and the Blackjack game
-% environment. Doge_Blackjack incorporates features such as
-% multiple betting options, balance tracking, restart, and cashout/exit.
+% the_table is a function that allows the user to bet at a blackjack table
+% the_table renders its own background on fig1 and allows the user many methods of betting chips through matlab UI
 %   Input arguments
-%      user
-%      chip_val
-%      fig 1
+%      user -> The users current data
+%      chip_val -> The cost of a single chip
+%      fig1 -> The current canvas the UI will be rendered on
 %   Output arguments
-%       None
+%       user_return -> Returns modified user data
+%       fig1_return -> Returns the modified figure
 
 
 
@@ -94,11 +94,16 @@ current_bet_label = uilabel(fig1, 'HorizontalAlignment', 'center',      ...
 
 
 bet_spinner = uispinner(fig1, 'Position', [pix_ss(3)*.15 pix_ss(4)*.4 pix_ss(3)*0.1 pix_ss(4)*.03],           ...
-    'Limits', [0 user.chips],'BackgroundColor', [0.1 0.1 0.1], 'FontColor', [1 0.4 0.15],'Visible','on', 'ValueChangedFcn', @(bet_spinner,event)...
-    start_betting(bet_spinner));
+    'Limits', [0 user.chips],'BackgroundColor', [0.1 0.1 0.1], 'FontColor', [1 0.4 0.15],'Visible','on', 'ValueChangedFcn', @start_betting);
 
-    function start_betting(bet_spinner)
-        
+    function start_betting(bet_spinner,~)
+        % start_betting is a callback function that is called when the user interact with the 'bet_spinner'
+        % It sets the users chip quantity, and temporary chips to the value requests within a Limits
+        % Input arguments:
+        %       bet_spinner -> The bet_spinner object passed through the callback function
+        %       Discarded
+        % Output arguments:
+        %       None
         chip_qty.Value = user.chips - bet_spinner.Value;
         temp_chips_bet = bet_spinner.Value;
         
@@ -111,8 +116,14 @@ uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
     'ButtonPushedFcn', @(deal_btn,event)         ...
     deal_lim(deal_btn,event));
 
-    function [] = deal_lim(deal_btn,~)
-        
+    function deal_lim(deal_btn,~)
+        % deal_lim is a callback function that is called when the user interacts with the 'DEAL EM' button 
+        % It checks the users bet validity, and if it is above 0 the values are set and the game begins
+        % Input Arguments:
+        %       deal_btn -> The button object
+        %       Discarded
+        % Output Arguments:
+        %   Nothing
         if temp_chips_bet > 0
             user.chips = user.chips - temp_chips_bet;
             user.curr_bet = temp_chips_bet;

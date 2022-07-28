@@ -3,17 +3,15 @@ function [user_return,fig1_return,goto_what] = deal_cards(fig1,user,chip_val,pix
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player
 % and the dealer.
-%   Input arguments
-%       deal_btn
-%       balance
-%       current_bet_label
-%       current_bet
-%       clr_bet_btn
-%       restart_btn
-%       cashout_btn
-%       fig1
-%   Output arguements
-%       user_return
+%   Input arguments:
+%       fig1 -> Current canvas that UI is displayed on
+%       user -> Users data
+%       chip_val -> Cost of a chip
+%       pix_ss -> Users screen size
+%   Output arguments
+%       user_return -> Returns the modified users data
+%       fig1_return -> Returns our current canvas
+%       goto_what -> Returns what function should the game execute next
 
 
 
@@ -110,7 +108,16 @@ end
 uiwait(fig1);
 
 
-    function [] = hit(hit_btn,~,card_2,card_2_render_string)
+    function hit(hit_btn,~,card_2,card_2_render_string)
+    % hit is a callback function that is called when the user clicks the 'hit_btn'
+    % hit generates a random card for the user and busts if the users total card value is over 21
+    % Input arguments:
+    %       hit_btn -> The button that is passed to the callback function
+    %       Discarded
+    %       card_2 -> The dealers face-down card that will be flipped if the hand ends
+    %       card_2_render_string -> The file path to render the dealers card
+    % Output arguments:
+    %       None
         [render_string, temp_val] = cards();
         if user.card_val == 20 && temp_val == 11
             temp_val = 1;
@@ -138,9 +145,19 @@ uiwait(fig1);
             
         end
     end
-    function [] = hold(hold_btn,~,hit_btn,card_2,card_2_render_string)
-        
-        
+    function hold(hold_btn,~,hit_btn,card_2,card_2_render_string)
+        % hold is a callback function that is called when the user clicks the 'hold' button
+        % It represents the end of the users turn (Unless the user goes bust!) and starts the dealers turn
+        % It hides the users buttons, starts the dealers turn, and then determines who won
+        % Input arguments:
+        %       hold_btn -> This gets passed by the callback and is used to hide the button
+        %       Discarded -> Discarded event data
+        %       hit_btn -> Allows us to hide the hit button 
+        %       card_2 -> This is the dealers card that will be unhid at the end of the turn
+        %       card_2_render_string -> The file path of the card
+        % Output arguments:
+        %       None
+
         hold_btn.Visible = 'off';
         hit_btn.Visible = 'off';
         
@@ -174,7 +191,15 @@ uiwait(fig1);
     end
 
 
-    function [] = gone_bust(chips_result)
+    function gone_bust(chips_result)
+    % gone_bust is a function that is called when the hand is over, it displays the next options for the user
+    % It displays a screen telling the user the amount of chips they won or lost
+    % gone_bust then displays buttons that the user clicks to be taken to different scenes 
+    % These buttons are only displayed if appropriate, and when the user fully loses all of their money and chips only an exit button will be displayed
+    % Input arguments:
+    %       chips_result -> A value representing the amount of chips won or lost during the hand. If it is negative there was a loss!
+    % Output arguments:
+    %       None
         if 1 < chips_result
             %Put a picture here saying they won x amount
         else
@@ -202,16 +227,33 @@ uiwait(fig1);
     end
 
     function call_cashier(~,~)
-        
+        % call_cashier is a callback function that allows the user to choose where they go next
+        % Input arguments:
+        %       Discarded
+        %       Discarded
+        % Output arguments:
+        %       None
         goto_what = 1;
         uiresume(fig1);
     end
     function call_table(~,~)
+        % call_table is a callback function that allows the user to choose where they go next
+        % Input arguments:
+        %       Discarded
+        %       Discarded
+        % Output arguments:
+        %       None
         
         goto_what = 2;
         uiresume(fig1);
     end
     function quit_game(~,~)
+        % call_table is a callback function that allows the user to choose where they go next
+        % Input arguments:
+        %       Discarded
+        %       Discarded
+        % Output arguments:
+        %       None
         exit;
     end
 
@@ -221,6 +263,12 @@ end
 
 
 function is_true = push(user_card_val, dealer_card_val)
+% is_true is used to determine if a push has occured (Meaning the user and dealer have equal cards!)
+% Input arguments:
+%       user_card_val -> The total value of the users cards
+%       dealer_card_val -> The total value of the dealers cards
+% Output arguments:
+%       is_true -> 1 (True) or 0 (False)
 if user_card_val == dealer_card_val
     is_true = 1;
 else
@@ -231,6 +279,12 @@ end
 
 
 function [string, val] = cards
+% cards is a function that generates a random card and returns its value and filepath
+% Input arguments:
+%       None
+% Output arguments:
+%       string -> The string of the filepath
+%       val -> The value of the cards 
 r = randi([1 4]);
 c = randi([1 13]);
 
