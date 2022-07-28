@@ -1,6 +1,6 @@
-function [] = blackjack ()
-% Blackjack initiates a uifigure (fig1) and displays the Doge Blackjack Main Menu.
-% Main Menu contains "New Game" and "Quit Game" options.
+function blackjack
+% blackjack is the main function that creates our uifigure (fig1) and displays the Doge blackjack main menu
+% The main menu contains a 'New Game' and an 'Exit' button utilizing callbacks to get user input
 %   Input arguments:
 %       None
 %   Output arguments:
