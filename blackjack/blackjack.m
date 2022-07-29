@@ -13,7 +13,7 @@ rng('shuffle'); %This makes our pseduorandom numbers as pseudorandom as possible
 
 fig1 = uifigure('Name', 'Blackjack',                               ...
     'Windowstate','fullscreen',                      ...
-    'Color', 'black', 'Pointer','hand', 'Visible', 'off');
+    'Color', 'black', 'Pointer','hand', 'Visible', 'on');
 %{
 This generates our graphic canvas which is used till the user closes the program
 It's visiblity is set to off so that it renders all at once when it is set to visibile on
@@ -47,7 +47,7 @@ We use a struct since it is a neat grouping of data that makes the code more rea
 
     %}
     chip_val = 50; % This sets the chips value for the game. This is dynamic and not hardcoded, and can be set to any positive (non-zero) number.
-    fig_main = uiimage(fig1, 'Position', pix_ss,'ImageSource','backgrounds\main_menu_background.gif');
+    uiimage(fig1, 'Position', pix_ss,'ImageSource','backgrounds\main_menu_background.gif');
     %{
 The 'struct' fig_main represents our background for the main Menu
 It uses the 'uiimage' function which creates an image of our choice within the figure we just created
@@ -56,7 +56,7 @@ We set the position of this (it's size) to the resolution of the current screen 
     %}
     %--------------------------------------------------------------------------
     % "Quit" push-button
-    quit_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
+    uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
         'Position', [pix_ss(3)*.2 pix_ss(4)*.12 pix_ss(3)*.15 pix_ss(4)*.12],   ...
         'IconAlignment', 'center',                  ...
         'Icon', 'buttons\quitgame.png', ...
@@ -87,7 +87,7 @@ We set the position of this (it's size) to the resolution of the current screen 
 
 %--------------------------------------------------------------------------
 % "New Game" push-button
-new_game_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
+uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
     'Position', [pix_ss(3)*.2 pix_ss(4)*.3 pix_ss(3)*.15 pix_ss(4)*.12],              ...
     'IconAlignment', 'center',                 ...
     'Icon', 'buttons\newgame.png',                                ...
@@ -120,16 +120,20 @@ new_game_btn = uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
             
             switch goto_what
                 case 1
-                    [user, fig1, goto_what] = cashier(user,chip_val,fig1,pix_ss);
+                    [user,goto_what] = cashier(user,chip_val,fig1,pix_ss);
                 case 2
-                    [user,fig1] = the_table(user,fig1,pix_ss);
-                    [user,fig1,goto_what] = deal_cards(fig1,user,chip_val,pix_ss);
+                    [user,goto_what] = the_table(user,fig1,pix_ss);
+                case 3
+                    [user,goto_what] = deal_cards(fig1,user,chip_val,pix_ss);
             end
+            
         end
+        clf(fig1);
+        cashout(user,fig1,chip_val,pix_ss);
+        uiwait(fig1,7);
+        close(fig1);
+        
     end
 
-
-
-fig1.Visible = 'on';
 
 end

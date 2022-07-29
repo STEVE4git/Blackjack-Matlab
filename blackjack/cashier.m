@@ -1,4 +1,4 @@
-function [user_return,fig1_return,goto_what_return] = cashier(user,chip_val,fig1,pix_ss)
+function [user_return,goto_what_return] = cashier(user,chip_val,fig1,pix_ss)
 % cashier represents our chip buying part of the program, the user can buy chips of any amount using buttons or keyboard Input
 % The 'uispinner' struct or click the 'Buy Max' button to buy the maximum amount of current chips!
 %   Input arguments
@@ -12,7 +12,7 @@ function [user_return,fig1_return,goto_what_return] = cashier(user,chip_val,fig1
 %       goto_what_return -> This tells the main program where to go next
 
 clf(fig1); % This prevents rendering other functions images and starts at a blank slate
-cashier_fig = uiimage(fig1, 'Position', pix_ss,'ImageSource','backgrounds\Cashier.jpg' );
+uiimage(fig1, 'Position', pix_ss,'ImageSource','backgrounds\Cashier.jpg' );
 %{ 
     cashier_fig is similar to the background you saw in the main menu
     It draws the background image 'Cashier.jpg' to the size of the screen
@@ -116,7 +116,6 @@ uibutton(fig1, 'push',                                       ...
         
         if user.chips > 0
             user_return = user;
-            fig1_return = fig1;
             goto_what_return = 2;
             uiresume(fig1);
             
