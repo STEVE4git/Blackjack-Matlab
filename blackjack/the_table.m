@@ -132,7 +132,7 @@ uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
         %       Discarded
         % Output Arguments:
         %   Nothing
-        if temp_chips_bet > 0
+        if temp_chips_bet > .1
             user.chips = user.chips - temp_chips_bet;
             user.curr_bet = temp_chips_bet;
             user_return = user;
