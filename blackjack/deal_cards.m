@@ -137,7 +137,7 @@ uiwait(fig1);
                 [1 1 1], 'Text', 'Bust! You lost ');
             uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
                 'Editable', 'off', 'ValueDisplayFormat',    ...
-                '%9.0f', 'HorizontalAlignment', 'center',   ...
+                '%9.2f', 'HorizontalAlignment', 'center',   ...
                 'FontSize', 40, 'FontColor', [1 0.4 0.15],  ...
                 'BackgroundColor', [.1 .1 .1], 'Position',...
                 [pix_ss(3)*.245 pix_ss(4)*.14 pix_ss(3)*.08 pix_ss(4)*.08], 'Value', user.curr_bet);
@@ -150,7 +150,8 @@ uiwait(fig1);
             user_return = user;
             hit_btn.Visible = 'off';
             hold_btn.Visible = 'off';
-            gone_bust(user.curr_bet*-1);
+            display_buttons;
+         
             
             
         end
@@ -242,13 +243,16 @@ uiwait(fig1);
                 [1 1 1], 'Text', 'Chips ');
         end
         user.curr_bet = 0;
-        if 0 < user.money
+       display_buttons;
+    end
+    function display_buttons
+         if 0.1 < user.money
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                 'FontSize', 16, 'FontWeight', 'bold',         ...
                 'Position', [pix_ss(3)*.8 pix_ss(4)*.6 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Want to buy more chips?', ...
                 'ButtonPushedFcn', {@call_cashier});
         end
-        if 0 < user.chips
+        if 0.1 < user.chips
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                 'FontSize', 26, 'FontWeight', 'bold','Backgroundcolor','r',         ...
                 'Position', [pix_ss(3)*.8 pix_ss(4)*.5 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Want to play again?', ...
@@ -261,7 +265,6 @@ uiwait(fig1);
             'Position', [pix_ss(3)*.8 pix_ss(4)*.4 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Exit', ...
             'ButtonPushedFcn', @quit_game);
     end
-
     function call_cashier(~,~)
         % call_cashier is a callback function that allows the user to choose where they go next
         % Input arguments:
