@@ -57,7 +57,7 @@ user.card_val = user.card_val + init_temp_val;
 
 card_4 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_4.ImageSource, init_temp_val] = cards;
-
+dealer_x = dealer_x*2;
 dealer_card_val = dealer_card_val+init_temp_val;
 
 if dealer_card_val == 21 && user.card_val == 21
@@ -182,13 +182,15 @@ uiwait(fig1);
         while dealer_card_val < 17
             [render_string,dealer_draw] = cards;
             uiimage(fig1, 'Position', [start_pos+dealer_x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14], 'ImageSource',render_string);
-            start_pos = start_pos+dealer_x;
+            dealer_x = dealer_x*2;
             dealer_card_val = dealer_card_val + dealer_draw;
         end
+
         if 21 < dealer_card_val
 
             user.chips = user.chips+ user.curr_bet*2;
             gone_bust(user.curr_bet,fig1,pix_ss);
+
         elseif user.card_val < dealer_card_val
 
             gone_bust(user.curr_bet*-1,fig1,pix_ss);
