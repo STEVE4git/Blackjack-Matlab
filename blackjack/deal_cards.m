@@ -55,7 +55,7 @@ card_4 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.3 pix_ss(3)*.1 pix
 
 dealer_card_val = dealer_card_val+init_temp_val;
 
-if dealer_card_val == 21 & user.card_val == 21
+if dealer_card_val == 21 && user.card_val == 21
     user.card_val = 0;
     user.chips = user.chips+user.curr_bet;
     user.curr_bet = 0;
