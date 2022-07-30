@@ -31,9 +31,9 @@ uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
 
 dealer_card_val = 0;
 hold_btn = 0;
-dealer_x = pix_ss(3)*.1;
+dealer_x = pix_ss(3)*.025;
 did_inital_deal_end = 0;
-x = pix_ss(3)*.1;
+x = pix_ss(3)*.025;
 card_1 = uiimage(fig1, 'Position', [pix_ss(3)*.5 pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_1.ImageSource, user.card_val] = cards;
 
@@ -120,7 +120,7 @@ uiwait(fig1);
         end
         user.card_val = user.card_val + temp_val;
 
-        new_card = uiimage(fig1, 'Position', [pix_ss(3)*.6+x pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
+        new_card = uiimage(fig1, 'Position', [pix_ss(3)*.525+x pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
         new_card.ImageSource = render_string;
         x = x+x;
 
@@ -169,7 +169,7 @@ uiwait(fig1);
         hold_btn.Visible = 'off';
         hit_btn.Visible = 'off';
 
-        start_pos = pix_ss(3)*.6;
+        start_pos = pix_ss(3)*.5;
         card_2.ImageSource = card_2_render_string;
         while dealer_card_val < 17
             [render_string,dealer_draw] = cards;
