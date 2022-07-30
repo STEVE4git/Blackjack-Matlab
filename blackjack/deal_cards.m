@@ -36,8 +36,7 @@ did_inital_deal_end = 0;
 x = pix_ss(3)*.025;
 card_1 = uiimage(fig1, 'Position', [pix_ss(3)*.5 pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_1.ImageSource, user.card_val] = cards;
-
-
+full_aces = 0;
 
 card_2 = uiimage(fig1, 'Position', [pix_ss(3)*.5 pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14]);
 card_2.ImageSource = 'b1fv.gif';
@@ -47,6 +46,12 @@ card_2.ImageSource = 'b1fv.gif';
 
 card_3 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_3.ImageSource, init_temp_val] = cards;
+if user.card_val == 11 && init_temp_val == 11
+    full_aces = 1;
+    init_temp_val = 1;
+elseif user.card_val == 11 || init_temp_val == 11
+    full_aces = 1;
+end
 
 user.card_val = user.card_val + init_temp_val;
 
@@ -125,7 +130,10 @@ uiwait(fig1);
         x = x+x;
 
 
-        if user.card_val > 21
+        if user.card_val > 21 && full_aces
+            user.card_val = user.card_val - 10;
+            full_aces = 0;
+        elseif user.card_val > 21
             card_2.ImageSource = card_2_render_string;
             uilabel(fig1, 'FontSize', 20, 'FontColor',               ...
                 [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
