@@ -17,20 +17,20 @@ fig1 = uifigure('Name', 'Blackjack',                               ...
 %{
 This generates our graphic canvas which is used till the user closes the program
 It's visiblity is set to off so that it renders all at once when it is set to visibile on
-    %}
-    %--------------------------------------------------------------------------
-    % Generate Main Menu background
-    set(0,'units','pixels'); %This sets the 'root object'(screen) to use the units of pixels. This allows us to position our assets based on the users screen size at runtime
-    pix_ss = get(0,'screensize'); %This grabs the screen size dimensions and stores it in this variable. It is a row vector of 4 elements.
-    %{
+%}
+%--------------------------------------------------------------------------
+% Generate Main Menu background
+set(0,'units','pixels'); %This sets the 'root object'(screen) to use the units of pixels. This allows us to position our assets based on the users screen size at runtime
+pix_ss = get(0,'screensize'); %This grabs the screen size dimensions and stores it in this variable. It is a row vector of 4 elements.
+%{
 Why do we need the users screensize?
 
 pix_ss contains [<users distance from left and right of screen > <Distance from top and bottom of screen> <Horizontal resolution> <Vertical resolution>]
 The first two elements are always set to [1 1] due to matlab wanting a safe margin. The second two elements are what is used
 The second two elements (3), (4) of pixel_ss are what we use because they contain the actual resolution!
-    %}
-    user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
-    %{
+%}
+user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
+%{
 
 What is a struct and why use it?
 
@@ -45,24 +45,24 @@ The members 'chips' and 'money' and 'curr_bet' can be represented as either a fl
 The 'card_val' is always an integer!
 We use a struct since it is a neat grouping of data that makes the code more readable, eaiser to manage, and prevents the headache of returning 4 different variables!
 
-    %}
-    chip_val = 50; % This sets the chips value for the game. This is dynamic and not hardcoded, and can be set to any positive (non-zero) number.
-    uiimage(fig1, 'Position', pix_ss,'ImageSource','backgrounds\main_menu_background.gif');
-    %{
+%}
+chip_val = 50; % This sets the chips value for the game. This is dynamic and not hardcoded, and can be set to any positive (non-zero) number.
+uiimage(fig1, 'Position', pix_ss,'ImageSource','backgrounds\main_menu_background.gif');
+%{
 The 'struct' fig_main represents our background for the main Menu
 It uses the 'uiimage' function which creates an image of our choice within the figure we just created
 We set the position of this (it's size) to the resolution of the current screen so that it takes up the background
 
-    %}
-    %--------------------------------------------------------------------------
-    % "Quit" push-button
-    uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
-        'Position', [pix_ss(3)*.2 pix_ss(4)*.12 pix_ss(3)*.15 pix_ss(4)*.12],   ...
-        'IconAlignment', 'center',                  ...
-        'Icon', 'buttons\quitgame.png', ...
-        'ButtonPushedFcn', @quit_game);
-    
-    function quit_game(~,~)
+%}
+%--------------------------------------------------------------------------
+% "Quit" push-button
+uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
+    'Position', [pix_ss(3)*.2 pix_ss(4)*.12 pix_ss(3)*.15 pix_ss(4)*.12],   ...
+    'IconAlignment', 'center',                  ...
+    'Icon', 'buttons\quitgame.png', ...
+    'ButtonPushedFcn', {@quit_game,fig1});
+
+    function quit_game(~,~,fig1)
         close(fig1);
     end
 %{
@@ -81,6 +81,9 @@ We set the position of this (it's size) to the resolution of the current screen 
       This means that our program has consistent behavior and allows other programmers to KNOW that all the variables inside a game function
       Won't be modified anywhere else in the program.
       This structure is used for all callbacks that have to modify user related data.
+      UI buttons don't follow this because they use handles rather than
+      being assigned a value so they can safely be passed to callback
+      functions.
 
 
 %}
@@ -91,7 +94,7 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
     'Position', [pix_ss(3)*.2 pix_ss(4)*.3 pix_ss(3)*.15 pix_ss(4)*.12],              ...
     'IconAlignment', 'center',                 ...
     'Icon', 'buttons\newgame.png',                                ...
-    'ButtonPushedFcn', @begin);
+    'ButtonPushedFcn', {@begin,user,fig1,pix_ss,chip_val});
 %{
     What is the 'Position' property and why are we doing this multiplication?
 
@@ -106,9 +109,9 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
     The length of the button is 15% of the horizontal resolution of the screen.
     The last element of 'Position' represents the buttons height, which is 12% of the vertical resolution of the screen
 
-    %}
-    
-    function begin(~,~)
+%}
+
+    function begin(~,~,user,fig1,pix_ss,chip_val)
         % begin Callback function that is called when the user clicks the 'new_game_btn'
         % begin runs the main loop of the program, and continues running untill the user exists
         % It calls all of our other functions
@@ -117,22 +120,22 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
         clf(fig1); % Clears our current figure to allow the 'cashier' function to display its images
         goto_what = 1;
         while goto_what %This loop allows us to end the program when the condition 'goto_what' is not 0
-            
+
             switch goto_what
                 case 1
-                    [user,goto_what] = cashier(user,chip_val,fig1,pix_ss);
+                    [user,goto_what] = cashier(user,fig1,pix_ss,chip_val);
                 case 2
                     [user,goto_what] = the_table(user,fig1,pix_ss);
                 case 3
-                    [user,goto_what] = deal_cards(fig1,user,chip_val,pix_ss);
+                    [user,goto_what] = deal_cards(user,fig1,pix_ss,chip_val);
             end
-            
+
         end
         clf(fig1);
         cashout(user,fig1,chip_val,pix_ss);
-        uiwait(fig1,7);
+        uiwait(fig1,5);
         close(fig1);
-        
+
     end
 
 

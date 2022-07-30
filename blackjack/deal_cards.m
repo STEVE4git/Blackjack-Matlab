@@ -1,4 +1,4 @@
-function [user_return,goto_what] = deal_cards(fig1,user,chip_val,pix_ss)
+function [user_return,goto_what] = deal_cards(user,fig1,pix_ss,chip_val)
 % deal_cards hides betting and restart options in Doge_Blackjack game
 % environment upon users selecting "Deal" to indicate betting has
 % concluded. The hand is initiated and cards are dealt to both the player
@@ -30,30 +30,30 @@ uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
 
 
 dealer_card_val = 0;
-hold_btn = struct();
+hold_btn = 0;
 dealer_x = pix_ss(3)*.1;
 did_inital_deal_end = 0;
 x = pix_ss(3)*.1;
 card_1 = uiimage(fig1, 'Position', [pix_ss(3)*.5 pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
-[card_1.ImageSource, user.card_val] = cards();
+[card_1.ImageSource, user.card_val] = cards;
 
 
 
 card_2 = uiimage(fig1, 'Position', [pix_ss(3)*.5 pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14]);
 card_2.ImageSource = 'b1fv.gif';
 
-[card_2_render_string,dealer_card_val] = cards();
+[card_2_render_string,dealer_card_val] = cards;
 
 
 card_3 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
-[card_3.ImageSource, temp_val] = cards();
+[card_3.ImageSource, init_temp_val] = cards;
 
-user.card_val = user.card_val + temp_val;
+user.card_val = user.card_val + init_temp_val;
 
 card_4 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14]);
-[card_4.ImageSource, temp_val] = cards();
+[card_4.ImageSource, init_temp_val] = cards;
 
-dealer_card_val = dealer_card_val+temp_val;
+dealer_card_val = dealer_card_val+init_temp_val;
 
 if push(user.card_val, dealer_card_val)
     user.card_val = 0;
@@ -61,27 +61,27 @@ if push(user.card_val, dealer_card_val)
     user.curr_bet = 0;
     user_return = user;
     card_2.ImageSource = card_2_render_string;
-    gone_bust(0);
+    gone_bust(0,fig1,pix_ss);
     did_inital_deal_end = 1;
 elseif user.card_val == 21
     user.card_val = 0;
     user.chips = user.chips + user.curr_bet +(user.curr_bet* 1.5);
     user_return = user;
     card_2.ImageSource = card_2_render_string;
-    gone_bust(user.curr_bet*1.5);
+    gone_bust(user.curr_bet*1.5,fig1,pix_ss);
     did_inital_deal_end = 1;
 elseif 21 < user.card_val || dealer_card_val == 21
     user.card_val = 0;
     user_return = user;
     card_2.ImageSource = card_2_render_string;
-    gone_bust(user.curr_bet*-1);
+    gone_bust(user.curr_bet*-1,fig1,pix_ss);
     did_inital_deal_end = 1;
 elseif 21 < dealer_card_val
     user.card_val = 0;
     user.chips = user.chips+ user.curr_bet*2;
     user_return = user;
     card_2.ImageSource = card_2_render_string;
-    gone_bust(user.curr_bet);
+    gone_bust(user.curr_bet,fig1,pix_ss);
     did_inital_deal_end = 1;
     
     
@@ -95,7 +95,7 @@ if ~did_inital_deal_end
         'VerticalAlignment', 'Center',                ...
         'Text', 'Hit Me!',                            ...
         'Visible', 'on',                            ...
-        'ButtonPushedFcn', {@hit,card_2,card_2_render_string});
+        'ButtonPushedFcn', {@hit,card_2,card_2_render_string,fig1,pix_ss});
     hold_btn = uibutton(fig1, 'push',                                       ...
         'BackgroundColor', [0.05 0.25 0.0],           ...
         'Position', [pix_ss(4)*.2 pix_ss(3)*.14 pix_ss(4)*.1 pix_ss(4)*.1],                  ...
@@ -103,12 +103,12 @@ if ~did_inital_deal_end
         'FontColor', [1 1 1], 'VerticalAlignment','Center', ...
         'Visible', 'on', 'Text', 'Stand',                            ...
         'ButtonPushedFcn', ...
-        {@hold, hit_btn,card_2,card_2_render_string});
+        {@hold, hit_btn,card_2,card_2_render_string,fig1,pix_ss});
 end
 uiwait(fig1);
 
 
-    function hit(hit_btn,~,card_2,card_2_render_string)
+    function hit(hit_btn,~,card_2,card_2_render_string,fig1,pix_ss)
         % hit is a callback function that is called when the user clicks the 'hit_btn'
         % hit generates a random card for the user and busts if the users total card value is over 21
         % Input arguments:
@@ -118,7 +118,7 @@ uiwait(fig1);
         %       card_2_render_string -> The file path to render the dealers card
         % Output arguments:
         %       None
-        [render_string, temp_val] = cards();
+        [render_string, temp_val] = cards;
         if user.card_val == 20 && temp_val == 11
             temp_val = 1;
         end
@@ -150,13 +150,13 @@ uiwait(fig1);
             user_return = user;
             hit_btn.Visible = 'off';
             hold_btn.Visible = 'off';
-            display_buttons;
+            display_buttons(fig1,pix_ss);
          
             
             
         end
     end
-    function hold(hold_btn,~,hit_btn,card_2,card_2_render_string)
+    function hold(hold_btn,~,hit_btn,card_2,card_2_render_string,fig1,pix_ss)
         % hold is a callback function that is called when the user clicks the 'hold' button
         % It represents the end of the users turn (Unless the user goes bust!) and starts the dealers turn
         % It hides the users buttons, starts the dealers turn, and then determines who won
@@ -175,7 +175,7 @@ uiwait(fig1);
         start_pos = pix_ss(3)*.6;
         card_2.ImageSource = card_2_render_string;
         while dealer_card_val < 17
-            [render_string,dealer_draw] = cards();
+            [render_string,dealer_draw] = cards;
             uiimage(fig1, 'Position', [start_pos+dealer_x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14], 'ImageSource',render_string);
             start_pos = start_pos+dealer_x;
             dealer_card_val = dealer_card_val + dealer_draw;
@@ -183,18 +183,18 @@ uiwait(fig1);
         if 21 < dealer_card_val
             user.card_val = 0;
             user.chips = user.chips+ user.curr_bet*2;
-            gone_bust(user.curr_bet);
+            gone_bust(user.curr_bet,fig1,pix_ss);
         elseif user.card_val < dealer_card_val
             user.card_val = 0;
-            gone_bust(user.curr_bet*-1);
+            gone_bust(user.curr_bet*-1,fig1,pix_ss);
         elseif push(user.card_val, dealer_card_val)
             user.card_val = 0;
             user.chips = user.chips+user.curr_bet;
-            gone_bust(0);
+            gone_bust(0,fig1,pix_ss);
         elseif dealer_card_val < user.card_val
             user.card_val = 0;
             user.chips = user.chips + user.curr_bet*2;
-            gone_bust(user.curr_bet);
+            gone_bust(user.curr_bet,fig1,pix_ss);
         end
         
         
@@ -202,7 +202,7 @@ uiwait(fig1);
     end
 
 
-    function gone_bust(chips_result)
+    function gone_bust(chips_result,fig1,pix_ss)
         % gone_bust is a function that is called when the hand is over, it displays the next options for the user
         % It displays a screen telling the user the amount of chips they won or lost
         % gone_bust then displays buttons that the user clicks to be taken to different scenes
@@ -243,29 +243,29 @@ uiwait(fig1);
                 [1 1 1], 'Text', 'Chips ');
         end
         user.curr_bet = 0;
-       display_buttons;
+       display_buttons(fig1,pix_ss);
     end
-    function display_buttons
+    function display_buttons(fig1,pix_ss)
          if 0.1 < user.money
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                 'FontSize', 16, 'FontWeight', 'bold',         ...
                 'Position', [pix_ss(3)*.8 pix_ss(4)*.6 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Want to buy more chips?', ...
-                'ButtonPushedFcn', {@call_cashier});
+                'ButtonPushedFcn', {@call_cashier,fig1});
         end
         if 0.1 < user.chips
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                 'FontSize', 26, 'FontWeight', 'bold','Backgroundcolor','r',         ...
                 'Position', [pix_ss(3)*.8 pix_ss(4)*.5 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Want to play again?', ...
-                'ButtonPushedFcn', {@call_table});
+                'ButtonPushedFcn', {@call_table,fig1});
         end
         
         
         uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             'FontSize', 16, 'FontWeight', 'bold',         ...
             'Position', [pix_ss(3)*.8 pix_ss(4)*.4 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Exit', ...
-            'ButtonPushedFcn', @quit_game);
+            'ButtonPushedFcn', {@quit_game,fig1});
     end
-    function call_cashier(~,~)
+    function call_cashier(~,~,fig1)
         % call_cashier is a callback function that allows the user to choose where they go next
         % Input arguments:
         %       Discarded
@@ -275,7 +275,7 @@ uiwait(fig1);
         goto_what = 1;
         uiresume(fig1);
     end
-    function call_table(~,~)
+    function call_table(~,~,fig1)
         % call_table is a callback function that allows the user to choose where they go next
         % Input arguments:
         %       Discarded
@@ -286,7 +286,7 @@ uiwait(fig1);
         goto_what = 2;
         uiresume(fig1);
     end
-    function quit_game(~,~)
+    function quit_game(~,~,fig1)
         % call_table is a callback function that allows the user to choose where they go next
         % Input arguments:
         %       Discarded

@@ -11,7 +11,6 @@ function [user_return,goto_what] = the_table(user,fig1,pix_ss)
 
 
 
-temp_chips_bet = 0;
 
 
 % Generates Blackjack table and dealer graphics.
@@ -60,35 +59,35 @@ cashout_btn = uibutton(fig1, 'push', 'FontSize', 14,                    ...
     'BackgroundColor', [0.15 0.15 0.15],...
     'HorizontalAlignment', 'center', ...
     'FontColor', [.15 .7 0],           ...
-    'Position', [pix_ss(3)*.1 pix_ss(4)*.5 pix_ss(3)*.15 pix_ss(4)*.03],      ...
+    'Position', [pix_ss(3)*.15 pix_ss(4)*.5 pix_ss(3)*.1 pix_ss(4)*.03],      ...
     'Text', 'CASHOUT AND EXIT',        ...
-    'ButtonPushedFcn', @exit_callback);
-    function exit_callback(~,~)
+    'ButtonPushedFcn', {@exit_callback,fig1});
+    function exit_callback(~,~,fig1)
         % exit_callback function brings up a dialog prompt asking if the user wants to cashout
         % Input arguments:
         %       None
         % Output arguments:
         %       None
-        
+
         uiconfirm(fig1, 'Do you wish to exit the game?',                ...
-            'Exit', 'Icon', 'warning', 'CloseFcn',@exit_game);
+            'Exit', 'Icon', 'warning', 'CloseFcn',{@exit_game,fig1});
     end
 
-    function exit_game(~,event)
+    function exit_game(~,event,fig1)
         % exit_game is a callback function that checks if the user wishes to exit
         % Input arguments:
         %       Discarded
         %       event -> The callback event used to check if they selected ok
         % Output arguments:
         %       None
-        
+
         if event.SelectedOption == "OK"
-            
+
             goto_what = 0;
             user_return = user;
             uiresume(fig1);
-            
-            
+
+
         end
     end
 
@@ -113,18 +112,16 @@ bet_spinner = uispinner(fig1, 'Position', [pix_ss(3)*.15 pix_ss(4)*.4 pix_ss(3)*
         % Output arguments:
         %       None
         chip_qty.Value = user.chips - bet_spinner.Value;
-        temp_chips_bet = bet_spinner.Value;
-        
+
     end
 
 
 uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
     'FontSize', 16, 'FontWeight', 'bold',         ...
     'Position', [pix_ss(3)*.08 pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.03], 'Text', 'DEAL EM!', ...
-    'ButtonPushedFcn', @(deal_btn,event)         ...
-    deal_lim(deal_btn,event));
+    'ButtonPushedFcn', {@deal_lim, cashout_btn,current_bet_label,bet_spinner,fig1});
 
-    function deal_lim(deal_btn,~)
+    function deal_lim(deal_btn,~,cashout_btn,current_bet_label,bet_spinner,fig1)
         % deal_lim is a callback function that is called when the user interacts with the 'DEAL EM' button
         % It checks the users bet validity, and if it is above 0 the values are set and the game begins
         % Input Arguments:
@@ -132,11 +129,11 @@ uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
         %       Discarded
         % Output Arguments:
         %   Nothing
-        if temp_chips_bet > .1
-            user.chips = user.chips - temp_chips_bet;
-            user.curr_bet = temp_chips_bet;
+        if bet_spinner.Value > .1
+            user.chips = user.chips - bet_spinner.Value;
+            user.curr_bet = bet_spinner.Value;
             user_return = user;
-            
+
             deal_btn.Visible = 'off';
             cashout_btn.Visible = 'off';
             current_bet_label.Visible = 'off';
@@ -144,13 +141,8 @@ uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             goto_what = 3;
             uiresume(fig1);
         else
-            selection = uiconfirm(fig1,"You haven't placed a bet!'! Hit ok to place a bet or hit cancel to exit!",...
-                'No Bet!');
-            switch selection
-                case 'OK'
-                case 'Cancel'
-                    exit;
-            end
+            uiconfirm(fig1,"You have to bet more than .1 of a chip! Press any button to continue!",'Invalid Bet!');
+
         end
     end
 uiwait(fig1);
