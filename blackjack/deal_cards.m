@@ -59,32 +59,28 @@ if push(user.card_val, dealer_card_val)
     user.card_val = 0;
     user.chips = user.chips+user.curr_bet;
     user.curr_bet = 0;
-    user_return = user;
     card_2.ImageSource = card_2_render_string;
     gone_bust(0,fig1,pix_ss);
     did_inital_deal_end = 1;
 elseif user.card_val == 21
     user.card_val = 0;
     user.chips = user.chips + user.curr_bet +(user.curr_bet* 1.5);
-    user_return = user;
     card_2.ImageSource = card_2_render_string;
     gone_bust(user.curr_bet*1.5,fig1,pix_ss);
     did_inital_deal_end = 1;
 elseif 21 < user.card_val || dealer_card_val == 21
     user.card_val = 0;
-    user_return = user;
     card_2.ImageSource = card_2_render_string;
     gone_bust(user.curr_bet*-1,fig1,pix_ss);
     did_inital_deal_end = 1;
 elseif 21 < dealer_card_val
     user.card_val = 0;
     user.chips = user.chips+ user.curr_bet*2;
-    user_return = user;
     card_2.ImageSource = card_2_render_string;
     gone_bust(user.curr_bet,fig1,pix_ss);
     did_inital_deal_end = 1;
-    
-    
+
+
 end
 if ~did_inital_deal_end
     hit_btn = uibutton(fig1, 'push',                                        ...
@@ -123,12 +119,12 @@ uiwait(fig1);
             temp_val = 1;
         end
         user.card_val = user.card_val + temp_val;
-        
+
         new_card = uiimage(fig1, 'Position', [pix_ss(3)*.6+x pix_ss(4)*.03 pix_ss(3)*.1 pix_ss(4)*.14]);
         new_card.ImageSource = render_string;
         x = x+x;
-        
-        
+
+
         if user.card_val > 21
             card_2.ImageSource = card_2_render_string;
             uilabel(fig1, 'FontSize', 40, 'FontColor',               ...
@@ -145,15 +141,16 @@ uiwait(fig1);
                 [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
                 'Position', [pix_ss(3)*.33 pix_ss(4)*.14 pix_ss(3)*.08 pix_ss(4)*.08], 'BackgroundColor',     ...
                 [1 1 1], 'Text', 'Chips!');
-            
+
             user.card_val = 0;
+            user.curr_bet = 0;
             user_return = user;
             hit_btn.Visible = 'off';
             hold_btn.Visible = 'off';
             display_buttons(fig1,pix_ss);
-         
-            
-            
+
+
+
         end
     end
     function hold(hold_btn,~,hit_btn,card_2,card_2_render_string,fig1,pix_ss)
@@ -168,10 +165,10 @@ uiwait(fig1);
         %       card_2_render_string -> The file path of the card
         % Output arguments:
         %       None
-        
+
         hold_btn.Visible = 'off';
         hit_btn.Visible = 'off';
-        
+
         start_pos = pix_ss(3)*.6;
         card_2.ImageSource = card_2_render_string;
         while dealer_card_val < 17
@@ -181,24 +178,24 @@ uiwait(fig1);
             dealer_card_val = dealer_card_val + dealer_draw;
         end
         if 21 < dealer_card_val
-            user.card_val = 0;
+
             user.chips = user.chips+ user.curr_bet*2;
             gone_bust(user.curr_bet,fig1,pix_ss);
         elseif user.card_val < dealer_card_val
-            user.card_val = 0;
+
             gone_bust(user.curr_bet*-1,fig1,pix_ss);
         elseif push(user.card_val, dealer_card_val)
-            user.card_val = 0;
+
             user.chips = user.chips+user.curr_bet;
             gone_bust(0,fig1,pix_ss);
         elseif dealer_card_val < user.card_val
-            user.card_val = 0;
+
             user.chips = user.chips + user.curr_bet*2;
             gone_bust(user.curr_bet,fig1,pix_ss);
         end
-        
-        
-        
+
+
+
     end
 
 
@@ -212,11 +209,11 @@ uiwait(fig1);
         % Output arguments:
         %       None
         if 1 < chips_result
-               uilabel(fig1, 'FontSize', 40, 'FontColor',               ...
+            uilabel(fig1, 'FontSize', 40, 'FontColor',               ...
                 [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
                 'Position', [pix_ss(3)*.1 pix_ss(4)*.14 pix_ss(3)*.14 pix_ss(4)*.08], 'BackgroundColor',     ...
                 [1 1 1], 'Text', 'You won ');
-            uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
+            uieditfield(fig1, 'numeric', 'Limits', [-1 Inf],              ...
                 'Editable', 'off', 'ValueDisplayFormat',    ...
                 '%9.2f', 'HorizontalAlignment', 'center',   ...
                 'FontSize', 40, 'FontColor', [1 0.4 0.15],  ...
@@ -227,11 +224,11 @@ uiwait(fig1);
                 'Position', [pix_ss(3)*.33 pix_ss(4)*.14 pix_ss(3)*.08 pix_ss(4)*.08], 'BackgroundColor',     ...
                 [1 1 1], 'Text', 'Chips ');
         else
-             uilabel(fig1, 'FontSize', 40, 'FontColor',               ...
+            uilabel(fig1, 'FontSize', 40, 'FontColor',               ...
                 [1 0.41 0.16], 'HorizontalAlignment', 'center',      ...
                 'Position', [pix_ss(3)*.1 pix_ss(4)*.14 pix_ss(3)*.14 pix_ss(4)*.08], 'BackgroundColor',     ...
                 [1 1 1], 'Text', 'You lost ');
-            uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
+            uieditfield(fig1, 'numeric', 'Limits', [-1 Inf],              ...
                 'Editable', 'off', 'ValueDisplayFormat',    ...
                 '%9.2f', 'HorizontalAlignment', 'center',   ...
                 'FontSize', 40, 'FontColor', [1 0.4 0.15],  ...
@@ -243,10 +240,12 @@ uiwait(fig1);
                 [1 1 1], 'Text', 'Chips ');
         end
         user.curr_bet = 0;
-       display_buttons(fig1,pix_ss);
+        user.card_val = 0;
+        user_return = user;
+        display_buttons(fig1,pix_ss);
     end
     function display_buttons(fig1,pix_ss)
-         if 0.1 < user.money
+        if 0.1 < user.money
             uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
                 'FontSize', 16, 'FontWeight', 'bold',         ...
                 'Position', [pix_ss(3)*.8 pix_ss(4)*.6 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Want to buy more chips?', ...
@@ -258,12 +257,12 @@ uiwait(fig1);
                 'Position', [pix_ss(3)*.8 pix_ss(4)*.5 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Want to play again?', ...
                 'ButtonPushedFcn', {@call_table,fig1});
         end
-        
-        
+
         uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             'FontSize', 16, 'FontWeight', 'bold',         ...
             'Position', [pix_ss(3)*.8 pix_ss(4)*.4 pix_ss(3)*.2 pix_ss(4)*.1], 'Text', 'Exit', ...
             'ButtonPushedFcn', {@quit_game,fig1});
+
     end
     function call_cashier(~,~,fig1)
         % call_cashier is a callback function that allows the user to choose where they go next
@@ -273,6 +272,7 @@ uiwait(fig1);
         % Output arguments:
         %       None
         goto_what = 1;
+        user_return = user;
         uiresume(fig1);
     end
     function call_table(~,~,fig1)
@@ -282,8 +282,9 @@ uiwait(fig1);
         %       Discarded
         % Output arguments:
         %       None
-        
+
         goto_what = 2;
+        user_return = user;
         uiresume(fig1);
     end
     function quit_game(~,~,fig1)
@@ -294,6 +295,7 @@ uiwait(fig1);
         % Output arguments:
         %       None
         goto_what = 0;
+        user_return = user;
         uiresume(fig1);
     end
 

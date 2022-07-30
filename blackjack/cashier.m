@@ -123,7 +123,7 @@ uibutton(fig1, 'push',                                        ... % The 'push' p
         % Discarded
         % Output arguments:
         % None
-        total_amount = user.money/chip_val;
+        total_amount = floor(user.money/chip_val);
         buy_chips_spnr.Value = total_amount;
         chips_display.Value = total_amount;
 

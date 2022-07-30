@@ -9,14 +9,7 @@ function [user_return,goto_what] = the_table(user,fig1,pix_ss)
 %       user_return -> Returns modified user data
 %       fig1_return -> Returns the modified figure
 
-
-
-
-
-% Generates Blackjack table and dealer graphics.
-fig_start = uiimage(fig1, 'BackgroundColor', 'Black',                   ...
-    'Position', pix_ss);
-fig_start.ImageSource = 'backgrounds\Main.jpeg';
+uiimage(fig1, 'BackgroundColor', 'Black','Position', pix_ss,'ImageSource','backgrounds\Main.jpeg');
 
 % balance appears in top left corner
 % balance label
@@ -51,8 +44,8 @@ chip_qty = uieditfield(fig1, 'numeric',         ...
     'HorizontalAlignment', 'center',       ...
     'BackgroundColor', [0.1 0.1 0.1],      ...
     'FontSize', 16,                        ...
-    'FontColor', [.8 .8 .8]);
-chip_qty.Value = user.chips;
+    'FontColor', [.8 .8 .8],               ...
+    'Value', user.chips);
 
 cashout_btn = uibutton(fig1, 'push', 'FontSize', 14,                    ...
     'FontWeight', 'bold',              ...
@@ -99,11 +92,33 @@ current_bet_label = uilabel(fig1, 'HorizontalAlignment', 'center',      ...
     [pix_ss(3)*.05 pix_ss(4)*.4 pix_ss(3)*0.1 pix_ss(4)*.03], 'Text', 'Current Bet');
 
 
-
 bet_spinner = uispinner(fig1, 'Position', [pix_ss(3)*.15 pix_ss(4)*.4 pix_ss(3)*0.1 pix_ss(4)*.03],           ...
-    'Limits', [0 user.chips],'BackgroundColor', [0.1 0.1 0.1], 'FontColor', [1 0.4 0.15],'Visible','on', 'ValueChangedFcn', @start_betting);
+    'Limits', [0 user.chips],'BackgroundColor', [0.1 0.1 0.1], 'FontColor', [1 0.4 0.15],'Visible','on', 'ValueChangedFcn', {@start_betting,chip_qty});
 
-    function start_betting(bet_spinner,~)
+all_in_button = uibutton(fig1, 'push',                                        ... % The 'push' property tells matlab that the user can only click the button
+    'BackgroundColor', [0.85 0.85 0.85],          ...
+    'Position', [pix_ss(3)*.08 pix_ss(4)*.34 pix_ss(3)*.1 pix_ss(4)*.03],                  ...
+    'FontSize', 14, 'FontWeight', 'bold',         ...
+    'VerticalAlignment', 'Center',                ...
+    'FontColor', 'White', 'BackgroundColor', '#73d12e',...
+    'Visible','on',...
+    'Text', 'Go ALL IN!', 'ButtonPushedfcn', {@max_bet,bet_spinner,chip_qty});
+
+    function max_bet(~,~,bet_spinner,chip_qty)
+        % max_chips is a callback function that is called when the user clicks the 'Buy MAX chips' button
+        % It divides the users money by the chip value and truncates it using the floor function
+        % It then sets the chips display and the balance display to the max amount the user can safely buy
+        % Input arguments:
+        % Discarded
+        % Output arguments:
+        % None
+        bet_spinner.Value = user.chips;
+        chip_qty.Value = 0;
+
+    end
+
+
+    function start_betting(bet_spinner,~,chip_qty)
         % start_betting is a callback function that is called when the user interact with the 'bet_spinner'
         % It sets the users chip quantity, and temporary chips to the value requests within a Limits
         % Input arguments:
@@ -119,9 +134,9 @@ bet_spinner = uispinner(fig1, 'Position', [pix_ss(3)*.15 pix_ss(4)*.4 pix_ss(3)*
 uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
     'FontSize', 16, 'FontWeight', 'bold',         ...
     'Position', [pix_ss(3)*.08 pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.03], 'Text', 'DEAL EM!', ...
-    'ButtonPushedFcn', {@deal_lim, cashout_btn,current_bet_label,bet_spinner,fig1});
+    'ButtonPushedFcn', {@deal_lim, cashout_btn,current_bet_label,bet_spinner,all_in_button,fig1});
 
-    function deal_lim(deal_btn,~,cashout_btn,current_bet_label,bet_spinner,fig1)
+    function deal_lim(deal_btn,~,cashout_btn,current_bet_label,bet_spinner,all_in_button,fig1)
         % deal_lim is a callback function that is called when the user interacts with the 'DEAL EM' button
         % It checks the users bet validity, and if it is above 0 the values are set and the game begins
         % Input Arguments:
@@ -138,6 +153,7 @@ uibutton(fig1, 'push', 'BackgroundColor', [0.9 0.9 0.9],     ...
             cashout_btn.Visible = 'off';
             current_bet_label.Visible = 'off';
             bet_spinner.Visible = 'off';
+            all_in_button.Visible = 'off';
             goto_what = 3;
             uiresume(fig1);
         else
