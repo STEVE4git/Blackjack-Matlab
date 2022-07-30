@@ -55,7 +55,7 @@ card_4 = uiimage(fig1, 'Position', [pix_ss(3)*.5+x pix_ss(4)*.3 pix_ss(3)*.1 pix
 
 dealer_card_val = dealer_card_val+init_temp_val;
 
-if push(user.card_val, dealer_card_val)
+if dealer_card_val == 21 & user.card_val == 21
     user.card_val = 0;
     user.chips = user.chips+user.curr_bet;
     user.curr_bet = 0;
@@ -115,7 +115,7 @@ uiwait(fig1);
         % Output arguments:
         %       None
         [render_string, temp_val] = cards;
-        if user.card_val == 20 && temp_val == 11
+        if user.card_val > 10 && temp_val == 11
             temp_val = 1;
         end
         user.card_val = user.card_val + temp_val;
