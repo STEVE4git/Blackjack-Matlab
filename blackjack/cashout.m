@@ -10,7 +10,7 @@ function cashout(user,fig1,chip_val,pix_ss,scale_font)
 %       user -> The users current data
 %   Output arguments
 %       None
-uiimage(fig1, 'Position', pix_ss,'ImageSource','blackjack\backgrounds\victory_screen.jpg','ScaleMethod','fill');
+uiimage(fig1, 'Position', pix_ss,'ImageSource','blackjack\backgrounds\victory_screen.jpg');
 
 uilabel(fig1, 'Position', [pix_ss(3)*.05 pix_ss(4)*.5 pix_ss(3)*.6 pix_ss(4)*.2],               ...
     'HorizontalAlignment', 'center',            ...
