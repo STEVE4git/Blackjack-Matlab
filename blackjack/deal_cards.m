@@ -63,7 +63,7 @@ card_1 = uiimage(fig1, 'Position', [pix_ss(3)*.45 pix_ss(4)*.03 pix_ss(3)*.1 pix
 % in their deck. Since it also gets modified in a callback it has to be
 % declared out of scope.
 full_aces = 0;
-
+dealer_full_aces = 0;
 % Due to the requirements of blackjack the dealer gets his second card face
 % down. We still keep the string because we want to show the dealers cards
 % at the end of the hand to make sure he isn't cheating!
@@ -90,6 +90,12 @@ user.card_val = user.card_val + init_temp_val;
 % The last card that the dealer draws
 card_4 = uiimage(fig1, 'Position', [pix_ss(3)*.45+x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14]);
 [card_4.ImageSource, init_temp_val] = cards;
+if dealer_card_val == 11 && init_temp_val == 11
+    dealer_full_aces = 1;
+    init_temp_val = 1;
+elseif dealer_card_val == 11 || init_temp_val == 11
+    dealer_full_aces = 1;
+end
 % We have to increment dealer_x so that the cards render correctly when its
 % the dealers turn.
 dealer_x = dealer_x+pix_ss(3)*.025;
@@ -157,7 +163,7 @@ if ~did_inital_deal_end
         'FontColor', [1 1 1], 'VerticalAlignment','Center', ...
         'Visible', 'on', 'Text', 'Stand',                            ...
         'ButtonPushedFcn', ...
-        {@hold, hit_btn,card_2,card_2_render_string,fig1,pix_ss,scale_font});
+        {@hold, hit_btn,card_2,card_2_render_string,fig1,pix_ss,scale_font,dealer_full_aces});
 end
 uiwait(fig1);
 
@@ -221,7 +227,7 @@ uiwait(fig1);
 
         end
     end
-    function hold(hold_btn,~,hit_btn,card_2,card_2_render_string,fig1,pix_ss,scale_font)
+    function hold(hold_btn,~,hit_btn,card_2,card_2_render_string,fig1,pix_ss,scale_font,dealer_full_aces)
         % hold is a callback function that is called when the user clicks the 'hold' button
         % It represents the end of the users turn (Unless the user goes bust!) and starts the dealers turn
         % It hides the users buttons, starts the dealers turn, and then determines who won
@@ -249,7 +255,14 @@ uiwait(fig1);
             [render_string,dealer_draw] = cards;
             uiimage(fig1, 'Position', [start_pos+dealer_x pix_ss(4)*.3 pix_ss(3)*.1 pix_ss(4)*.14], 'ImageSource',render_string);
             dealer_x = dealer_x+pix_ss(3)*.025;
+            if 10 < dealer_card_val && dealer_draw == 11
+                dealer_draw = 1;
+            end
             dealer_card_val = dealer_card_val + dealer_draw;
+            if 21 < dealer_card_val && dealer_full_aces
+                dealer_full_aces = 0;
+                dealer_card_val = dealer_card_val - 10;
+            end
         end
         % The dealer has gone bust!
         if 21 < dealer_card_val
