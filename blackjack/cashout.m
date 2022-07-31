@@ -5,9 +5,11 @@ function cashout(user,fig1,chip_val,pix_ss,scale_font)
 % screen displaying the users balance
 % ending the game.
 %   Input argument:
-%       cashout_btn -> The button that is passed by the callback
-%       Discarded
-%       user -> The users current data
+%       user -> The user struct that stores all of the users data.
+%       fig1 -> Handle to our current figure
+%       chip_val -> Value of each chip
+%       pix_ss -> The Users screen size
+%       scale_font -> The font scaling percentage based on the users screen
 %   Output arguments
 %       None
 uiimage(fig1, 'Position', pix_ss,'ImageSource','blackjack\backgrounds\victory_screen.jpg');
@@ -27,7 +29,8 @@ uieditfield(fig1, 'numeric',               ...
     'FontColor', [.15 .7 0],                     ... % This sets the font color to green
     'HorizontalAlignment', 'center',             ...
     'fontweight', 'bold', ...
-    'Position', [pix_ss(3)*.65 pix_ss(4)*.5 pix_ss(3)*.3 pix_ss(4)*.2], 'Value', (user.money+user.chips*chip_val+user.curr_bet*chip_val));
+    'Position', [pix_ss(3)*.65 pix_ss(4)*.5 pix_ss(3)*.3 pix_ss(4)*.2], ...
+    'Value', (user.money+user.chips*chip_val+user.curr_bet*chip_val));
 
 
 

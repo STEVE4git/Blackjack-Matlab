@@ -3,21 +3,21 @@ function [user_return,goto_what_return] = cashier(user,fig1,pix_ss,chip_val,scal
 % The 'uispinner' struct or click the 'Buy Max' button to buy the maximum amount of current chips!
 %   Input arguments
 %       user -> The struct containing all of the users information
-%       chip_val -> The value set for the current chips
 %       fig1 -> Our canvas which will render all of the cashiers graphics
 %       pix_ss -> The screen resolution of the user which allows us to appropriately size the buttons
+%       chip_val -> The value set for the current chips
+%       scale_font -> The percentage that we scale the font up or down by
+%
 %   Output arguments
 %       user_return -> The user struct that contains all of the users information
 %       fig1_return -> fig1, our canvas which is the matlab window
 %       goto_what_return -> This tells the main program where to go next
 
 clf(fig1); % This prevents rendering other functions images and starts at a blank slate
+
+% This uiimage draws the background image to the size of the screen
 uiimage(fig1, 'Position', pix_ss,'ImageSource','backgrounds\Cashier.jpg');
-%{
-    cashier_fig is similar to the background you saw in the main menu
-    It draws the background image 'Cashier.jpg' to the size of the screen
-    
-%}
+% Provides a label for the users current money
 uilabel(fig1, 'Position', [pix_ss(3)*.01 pix_ss(4)*.65 pix_ss(3)*.1 pix_ss(4)*.05],               ...
     'HorizontalAlignment', 'center',            ...
     'FontSize', 16*scale_font,                            ...
@@ -43,7 +43,7 @@ uilabel(fig1, 'Position', [pix_ss(3)*.01 pix_ss(4)*.5 pix_ss(3)*.1 pix_ss(4)*.05
     The labels and values that represent the users current money are always in the upper left hand corner
     
 %}
-
+% Displays the users chips
 chips_display = uieditfield(fig1, 'numeric',               ...
     'Editable', 'off',                           ...
     'ValueDisplayFormat', '%9.2f',               ...
@@ -52,6 +52,7 @@ chips_display = uieditfield(fig1, 'numeric',               ...
     'HorizontalAlignment', 'center',             ...
     'BackgroundColor', [0.1 0.1 0.1],            ...
     'Position', [pix_ss(3)*.1 pix_ss(4)*.5 pix_ss(3)*.1 pix_ss(4)*.05], 'Value', user.chips);
+% This button allows the user to exit the game
 uibutton(fig1, 'push', 'FontSize', 14*scale_font,                    ...
     'FontWeight', 'bold',              ...
     'BackgroundColor', [0.8 0.15 0.15],...
@@ -63,7 +64,7 @@ uibutton(fig1, 'push', 'FontSize', 14*scale_font,                    ...
     function exit_callback(~,~,fig1)
         % exit_callback function brings up a dialog prompt asking if the user wants to cashout
         % Input arguments
-        %       None
+        %       fig1 -> Handle to our current figure
         % Output arguments
         %       None
 
@@ -76,14 +77,15 @@ uibutton(fig1, 'push', 'FontSize', 14*scale_font,                    ...
         % Input arguments:
         %       Discarded
         %       event -> The callback event used to check if they selected ok
+        %       fig1 -> Handle to our current figure
         % Output arguments:
         %       None
 
         if event.SelectedOption == "OK"
 
-            goto_what_return = 0;
+            goto_what_return = 0; % Tells the game loop in blackjack to break
             user_return = user;
-            uiresume(fig1);
+            uiresume(fig1); % This is what really exits the game as it continues where 'uiwait' stopped
 
 
         end
@@ -102,14 +104,24 @@ uilabel(fig1, 'HorizontalAlignment', 'center',          ...
 
         % Input arguments:
         %   buy_chips_spnr -> The display that the user interacts with. This allows us to see what value the user chose
-        %   Discarded
+        %   chips_display -> The users current chips
+        %   balance -> The balance figure that stores the users cash
+        %   chip_val -> Value of a single chip
         % Output arguments:
         %   None
 
+        % balance.Value is the UI field that contains the users 'Current Balance'
+        % We set this by subtracting the amount of chips the user wants to
+        % buy (Currently stored in buy_chips_spnr which is the editable UI
+        % field) times the value of each chip.
         balance.Value = user.money - buy_chips_spnr.Value * chip_val;
+        % chips_display is the display field of the amount of chips the
+        % user currently has. This updates to reflect the current values if
+        % they do go through with buying
         chips_display.Value = user.chips + buy_chips_spnr.Value;
-    end
 
+    end
+% Buy as many chips as the user can afford!
 uibutton(fig1, 'push',                                        ... % The 'push' property tells matlab that the user can only click the button
     'BackgroundColor', [0.85 0.85 0.85],          ...
     'Position', [pix_ss(3)*.8 pix_ss(4)*.40 pix_ss(3)*.15 pix_ss(4)*.07],                  ...
@@ -120,16 +132,21 @@ uibutton(fig1, 'push',                                        ... % The 'push' p
 
     function max_chip(~,~,chips_display,buy_chips_spnr,balance,chip_val)
         % max_chips is a callback function that is called when the user clicks the 'Buy MAX chips' button
-        % It divides the users money by the chip value and truncates it using the floor function
         % It then sets the chips display and the balance display to the max amount the user can safely buy
         % Input arguments:
-        % Discarded
+        %   chips_display -> This needs to bet set to the max value
+        %   buy_chips_spnr -> The UI spinner that needs to be set
+        %   balance -> The users running balance that gets changed
+        %   chip_val -> The value of each individual chip
         % Output arguments:
         % None
-        total_amount = floor(user.money/chip_val);
+        
+        % Just gets the maximum amount of chips possible and sets the UI 
+        % to reflect that
+        total_amount = user.money/chip_val;
         buy_chips_spnr.Value = total_amount;
         chips_display.Value = total_amount;
-
+        % None of this changes the real user struct, just the UI elements
         balance.Value = user.money - total_amount*chip_val;
     end
 
@@ -147,20 +164,39 @@ uibutton(fig1, 'push',                                       ...
         % This grabs the current amount of chips the user decided to buy and sets them into the users data
         % This function will not let the user proceed if they have 0 chips due to chips being a requirement to play
         % Input arguments:
-        % Discarded
+        %       buy_chips_spnr -> The clickable/typeable UIfield that stores the
+        %       amount of chips the user wants to buy
+        %       fig1 -> Handle to our current figure
+        %       chip_val -> Value of a single chip
         % Output arguments:
-        % None
+        %       None
+
+        % These need to be temporary values to prevent chaos if the user
+        % decides to not buy anything
         temp_chips = user.chips + buy_chips_spnr.Value;
         temp_money = user.money - chip_val*buy_chips_spnr.Value;
+        % If these values are bogos (aka the user tries to buy 0 chips)
+        % it won't go through and they're discarded
 
+        % 0.1 was chosen as the minimum amount of buyable chips for many reasons
+        % First is that any smaller than this becomes hard to type
+        % If poor aunt minnie winds up with .00000003256 chips she has to
+        % type all of those decimal places in or just go in all.
+        % Second is that it prevents scary floating point math errors where
+        % numbers get so small that the computer has to truncate to
+        % represent it. It prevents alot of sketchiness and keeps the user
+        % in mind.
         if temp_chips >= 0.1
+            % At this point the values are set and they're real
             user.chips = temp_chips;
             user.money = temp_money;
-            user_return = user;
-            goto_what_return = 2;
-            uiresume(fig1);
+            user_return = user; % Returns the modified user struct
+            goto_what_return = 2; % Tells the game loop to go to 'the_table'
+            uiresume(fig1); % Ends the function and returns to the game loop by resuming where uiwait is
 
         else
+            % A bogos value has been entered! Minorly inconvience them by
+            % making them click a button and continue!
             uiconfirm(fig1,'You cannot buy less than .1 chip! Press any button to continue!',"I'm the only one allowed to order negative items!");
 
         end
