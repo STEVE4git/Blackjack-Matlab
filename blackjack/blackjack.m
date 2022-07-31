@@ -22,6 +22,7 @@ It's visiblity is set to off so that it renders all at once when it is set to vi
 % Generate Main Menu background
 set(0,'units','pixels'); %This sets the 'root object'(screen) to use the units of pixels. This allows us to position our assets based on the users screen size at runtime
 pix_ss = get(0,'screensize'); %This grabs the screen size dimensions and stores it in this variable. It is a row vector of 4 elements.
+
 %{
 Why do we need the users screensize?
 
@@ -30,8 +31,8 @@ The first two elements are always set to [1 1] due to matlab wanting a safe marg
 The second two elements (3), (4) of pixel_ss are what we use because they contain the actual resolution!
 %}
 user = struct('chips',0,'money',5000,'card_val',0,'curr_bet',0);
-%{
 
+%{
 What is a struct and why use it?
 
 
@@ -59,6 +60,7 @@ We set the position of this (it's size) to the resolution of the current screen 
 uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
     'Position', [pix_ss(3)*.2 pix_ss(4)*.12 pix_ss(3)*.15 pix_ss(4)*.12],   ...
     'IconAlignment', 'center',                  ...
+    'Text','',...
     'Icon', 'buttons\quitgame.png', ...
     'ButtonPushedFcn', {@quit_game,fig1});
 
@@ -68,12 +70,12 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
 %{
       CALLBACK STRUCTURE EXPLANATION:
       
-      Why wasn't fig1 in 'quit_game' passed as a parameter?
+      Why can't the user struct be passed as a callback!
       This is due to how callbacks work in matlab.
       When matlab initalizes a callback function it makes a copy of the variable at that specific time
       Thus, not only is the value WRONG but the changes made to the variable in the callback aren't actually made!
       This applies to ALL callback functions in this program and is the reason some critical values such as the 'user' struct
-      Can't be passed as a paramter. This is a property of callbacks, and programmers get around this by using 'global variables'
+      Can't be passed as a parameter. This is a property of callbacks, and programmers get around this by using 'global variables'
       These are truly 'global' and can be seen throughout any function in the program
       They have unlimited scope (Ability to be seen EVERYWHERE) and can cause erratic and undefined behavior
       Our program solves this rather cleverly through having the 'user' struct only be able to be modified by callbacks in the current scene
@@ -93,6 +95,7 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',           ...
 uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
     'Position', [pix_ss(3)*.2 pix_ss(4)*.3 pix_ss(3)*.15 pix_ss(4)*.12],              ...
     'IconAlignment', 'center',                 ...
+    'Text','',...
     'Icon', 'buttons\newgame.png',                                ...
     'ButtonPushedFcn', {@begin,user,fig1,pix_ss,chip_val});
 %{
@@ -119,20 +122,21 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
         % Output arguments: None
         clf(fig1); % Clears our current figure to allow the 'cashier' function to display its images
         goto_what = 1;
+        scale_font = pix_ss(3)/1920;
         while goto_what %This loop allows us to end the program when the condition 'goto_what' is not 0
 
             switch goto_what
                 case 1
-                    [user,goto_what] = cashier(user,fig1,pix_ss,chip_val);
+                    [user,goto_what] = cashier(user,fig1,pix_ss,chip_val,scale_font);
                 case 2
-                    [user,goto_what] = the_table(user,fig1,pix_ss);
+                    [user,goto_what] = the_table(user,fig1,pix_ss,scale_font);
                 case 3
-                    [user,goto_what] = deal_cards(user,fig1,pix_ss,chip_val);
+                    [user,goto_what] = deal_cards(user,fig1,pix_ss,chip_val,scale_font);
             end
 
         end
         clf(fig1);
-        cashout(user,fig1,chip_val,pix_ss);
+        cashout(user,fig1,chip_val,pix_ss,scale_font);
         uiwait(fig1,5);
         close(fig1);
 
