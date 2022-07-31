@@ -11,7 +11,7 @@ function blackjack
 % Initalize RNG
 %--------------------------------------------------------------------------
 % This makes our pseduorandom numbers as pseudorandom as possible! This sets it as the number of seconds since Jan,1,1970.
-rng('shuffle'); 
+rng('shuffle');
 
 %--------------------------------------------------------------------------
 % Generate Main Menu background

@@ -140,8 +140,8 @@ uibutton(fig1, 'push',                                        ... % The 'push' p
         %   chip_val -> The value of each individual chip
         % Output arguments:
         % None
-        
-        % Just gets the maximum amount of chips possible and sets the UI 
+
+        % Just gets the maximum amount of chips possible and sets the UI
         % to reflect that
         total_amount = user.money/chip_val;
         buy_chips_spnr.Value = total_amount;

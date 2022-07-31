@@ -305,8 +305,8 @@ uiwait(fig1);
 
         % chips_result gets passed as negative if the user lost chips
         % We have to check it because it determines what the text/color of
-        % the buttons are, e.g green if you won, red if you lost. 
-        if 0 < chips_result 
+        % the buttons are, e.g green if you won, red if you lost.
+        if 0 < chips_result
             uilabel(fig1, 'FontSize', 20, 'FontColor', [0.2 0.6 0.15], 'FontWeight', 'Bold',              ...
                 'HorizontalAlignment', 'center',      ...
                 'Position', [pix_ss(3)*.1 pix_ss(4)*.14 pix_ss(3)*.14 pix_ss(4)*.08], 'BackgroundColor',     ...
