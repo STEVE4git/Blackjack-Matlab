@@ -12,8 +12,10 @@ function cashout(user,fig1,chip_val,pix_ss,scale_font)
 %       scale_font -> The font scaling percentage based on the users screen
 %   Output arguments
 %       None
-uiimage(fig1, 'Position', pix_ss,'ImageSource','blackjack\backgrounds\victory_screen.jpg');
 
+% This displays our end screen
+uiimage(fig1, 'Position', pix_ss,'ImageSource','blackjack\backgrounds\victory_screen.jpg');
+% Label that tells the user what the value means
 uilabel(fig1, 'Position', [pix_ss(3)*.05 pix_ss(4)*.5 pix_ss(3)*.6 pix_ss(4)*.2],               ...
     'HorizontalAlignment', 'center',            ...
     'FontSize', 36*scale_font,...

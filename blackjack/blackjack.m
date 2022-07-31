@@ -10,7 +10,8 @@ function blackjack
 %--------------------------------------------------------------------------
 % Initalize RNG
 %--------------------------------------------------------------------------
-rng('shuffle'); %This makes our pseduorandom numbers as pseudorandom as possible! This sets it as the number of seconds since Jan,1,1970.
+% This makes our pseduorandom numbers as pseudorandom as possible! This sets it as the number of seconds since Jan,1,1970.
+rng('shuffle'); 
 
 %--------------------------------------------------------------------------
 % Generate Main Menu background
@@ -153,8 +154,10 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
         % begin Callback function that is called when the user clicks the 'new_game_btn'
         % begin runs the main loop of the program, and continues running untill the user exists
         % It calls all of our other functions
-        % Input arguments: None
-        % Output arguments: None
+        % Input arguments
+        %       None
+        % Output arguments
+        %       None
         clf(fig1); % Clears our current figure to allow the 'cashier' function to display its images
         goto_what = 1; % Goto the cashier first! They need chips!
         scale_font = pix_ss(3)/1920; % 1920x1080 (1080p) is the default

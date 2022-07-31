@@ -119,8 +119,9 @@ all_in_button = uibutton(fig1, 'push',                                        ..
     function max_bet(~,~,bet_spinner,chip_qty)
         % max_chips is a callback function that is called when the user clicks the 'Buy MAX chips' button
         % It then sets the chips display and the balance display to the max amount the user can safely buy
-        % Input arguments:
-        % Discarded
+        % Input arguments
+        % bet_spinner -> The bet spinner that we set to the users chips
+        % chip_qty -> The chip_qty that displays the users chips
         % Output arguments:
         % None
         bet_spinner.Value = user.chips; % Pretty simplistic, just set it to the users chips!
