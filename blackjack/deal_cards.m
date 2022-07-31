@@ -14,12 +14,12 @@ function [user_return,goto_what] = deal_cards(user,fig1,pix_ss,chip_val,scale_fo
 %       goto_what -> Returns what function should the game execute next
 
 
-
+% The label telling the user how much money they are currently wagering
 uilabel(fig1, 'HorizontalAlignment', 'center',          ...
     'VerticalAlignment', 'center', 'Fontsize',...
     18*scale_font, 'FontColor', [1 0.4 0.15], 'Position',...
     [pix_ss(3)*.05 pix_ss(4)*.5 pix_ss(3)*.1 pix_ss(4)*.03], 'Text', 'Pot Size  $');
-
+% This is the field that represents that value
 uieditfield(fig1, 'numeric', 'Limits', [0 Inf],              ...
     'Editable', 'off', 'ValueDisplayFormat',    ...
     '%9.2f', 'HorizontalAlignment', 'center',   ...
@@ -63,6 +63,9 @@ card_1 = uiimage(fig1, 'Position', [pix_ss(3)*.45 pix_ss(4)*.03 pix_ss(3)*.1 pix
 % in their deck. Since it also gets modified in a callback it has to be
 % declared out of scope.
 full_aces = 0;
+% The dealers aces are modified during a single call (When the dealer plays
+% his hand). So it doesn't need to span multiple functions. It can be
+% passed as a parameter.
 dealer_full_aces = 0;
 % Due to the requirements of blackjack the dealer gets his second card face
 % down. We still keep the string because we want to show the dealers cards
@@ -99,8 +102,7 @@ end
 % We have to increment dealer_x so that the cards render correctly when its
 % the dealers turn.
 dealer_x = dealer_x+pix_ss(3)*.025;
-% The dealer doesn't get soft aces and has to take them at 11. This makes
-% it eaiser for us!
+
 dealer_card_val = dealer_card_val+init_temp_val;
 % In the rare chance that both the user and dealer get blackjack you have
 % to treat it as a push
@@ -146,6 +148,7 @@ elseif 21 < dealer_card_val
 
 
 end
+% Don't render the buttons if the first two cards ended the hand!
 if ~did_inital_deal_end
     hit_btn = uibutton(fig1, 'push',                                        ...
         'BackgroundColor', [0.05 0.25 0.0],           ...
@@ -165,7 +168,7 @@ if ~did_inital_deal_end
         'ButtonPushedFcn', ...
         {@hold, hit_btn,card_2,card_2_render_string,fig1,pix_ss,scale_font,dealer_full_aces});
 end
-uiwait(fig1);
+uiwait(fig1); % Prevents our UI from being destroyed as soon as the function ends
 
 
     function hit(hit_btn,~,card_2,card_2_render_string,fig1,pix_ss,scale_font)
@@ -176,6 +179,9 @@ uiwait(fig1);
         %       Discarded
         %       card_2 -> The dealers face-down card that will be flipped if the hand ends
         %       card_2_render_string -> The file path to render the dealers card
+        %       fig1 -> The handle to our current figure
+        %       pix_ss -> The users screen information
+        %       scale_font -> The font scaling factor that we use
         % Output arguments:
         %       None
         [render_string, temp_val] = cards;

@@ -155,7 +155,10 @@ uibutton(fig1, 'push', 'BackgroundColor', 'Black',       ...
         % begin runs the main loop of the program, and continues running untill the user exists
         % It calls all of our other functions
         % Input arguments
-        %       None
+        %       user -> The user struct that stores our data
+        %       fig1 -> The handle to our current figure
+        %       pix_ss -> The users current screen resolution
+        %       chip_val -> The value per chip
         % Output arguments
         %       None
         clf(fig1); % Clears our current figure to allow the 'cashier' function to display its images
