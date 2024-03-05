@@ -1,4 +1,4 @@
-# Doge BlackJack game in Matlab
+#BlackJack game in Matlab
 
 This project uses matlab graphics to create a basic blackjack game in Matlab with a limited rulset.
 It uses the users screen resolution to provide a rich experience by sizing the UI and font based on the users screen resolution.
